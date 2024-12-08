@@ -1,7 +1,7 @@
 import sqlite3
 import json
 
-def create_database(db = "health_controller.db"):
+def create_database(db = "health_control.db"):
     """Creates the SQLite database and tables."""
     cnct = sqlite3.connect(db)
     cursor = cnct.cursor()
@@ -10,10 +10,12 @@ def create_database(db = "health_controller.db"):
         CREATE TABLE IF NOT EXISTS Products (
             product_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT UNIQUE NOT NULL,
-            calories INTEGER,
-            protein_grams INTEGER,
-            fat_grams REAL,
-            corbohydrates_grams REAL,               
+            kilocalories REAL,
+            protein_gramms REAL,
+            fat_gramms REAL,
+            carbohydrates_gramms REAL,
+            serving_size_gramms REAL
+                                
         )           
     """)
     
@@ -42,14 +44,14 @@ def create_database(db = "health_controller.db"):
     cnct.commit()
     cnct.close()
 
-def insert_data(db = "health_controller.db"):
-    """"Inserts data into the database."""
+    def insert_data(db = "health_controller.db"):
+     """"Inserts data into the database."""
     cnct = sqlite3.connect(db)
     cursor = cnct.cursor()   
 
     products = [
-        ('Яблоко', 47, 0.4, 0.4, 9.8, 100), #0
-        ('Банан', 96, 1.5, 0.5, 21, 100),  #1
+        ('Яблоко', 47, 0.4, 0.4, 9.8, 100), 
+        ('Банан', 96, 1.5, 0.5, 21, 100),  
         ('Апельсин', 36, 0.9, 8.1, 0.2, 100),
         ('Абрикос', 45, 0.9, 0, 10.5, 100),
         ('Арбуз', 27, 0.5, 0.2, 6, 100),
@@ -97,106 +99,110 @@ def insert_data(db = "health_controller.db"):
         ('Семга', 142, 19.84, 6.34, 0, 100)
         
     ]
-
+   
     cursor.executemany("""
                        INSERT INTO Products 
-                       (name, calories, protein_grams, fat_grams, carbohydrates_grams, serving_size_grams) 
-                       VALUES (?, ?, ?, ?, ?, ?, ?)""", 
-                       products)
-    
-    meal_plans = [
-        (16, 20, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([products[i] for i in (0, 4, 6) if i < len(products)], db)),
-        (16, 20, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (16, 20, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (16, 20, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (16, 20, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (16, 20, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (21, 25, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (21, 25, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (21, 25, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (21, 25, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (21, 25, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (21, 25, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (26, 30, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (26, 30, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (26, 30, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (26, 30, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (26, 30, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (26, 30, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (31, 35, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (31, 35, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (31, 35, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (31, 35, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (31, 35, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (31, 35, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (36, 40, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (36, 40, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (36, 40, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (36, 40, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (36, 40, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (36, 40, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (41, 45, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (41, 45, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (41, 45, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (41, 45, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (41, 45, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (41, 45, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (46, 50, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (46, 50, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (46, 50, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (46, 50, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (46, 50, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (46, 50, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
-
-        (51, 55, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
-        (51, 55, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
-        (51, 55, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
-        (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
-        (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
-        (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
-        (51, 55, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
-        (51, 55, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
-        (51, 55, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([]))
-
-        # (20, 30, 18.5, 25, "Low-Calorie Plan", json.dumps([1, 2]))
-        # (30, 40, 22, 28, "Balanced-Calorie Plan", json.dumps([1, 3, 4]))
-        # (45, 60, 25, 30, "High-Caloried Plan", json.dumps([3, 5]))
-    ]
-
-    cursor.executemany(""" INSERT INTO MealPlans 
-                       (age_min, age_max, bmi_min, bmi_max, description, products_nedeed)
+                       (name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms, serving_size_gramms) 
                        VALUES (?, ?, ?, ?, ?, ?)""", 
-                       meal_plans)
-    
+                       products)
     cnct.commit()
     cnct.close()
+
+
+
+    # meal_plans = [
+    #     (16, 20, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([products[i] for i in (0, 4, 6) if i < len(products)], db)),
+    #     (16, 20, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (16, 20, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (16, 20, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (16, 20, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (16, 20, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (16, 20, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (21, 25, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (21, 25, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (21, 25, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (21, 25, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (21, 25, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (21, 25, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (21, 25, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (26, 30, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (26, 30, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (26, 30, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (26, 30, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (26, 30, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (26, 30, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (26, 30, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (31, 35, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (31, 35, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (31, 35, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (31, 35, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (31, 35, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (31, 35, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (31, 35, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (36, 40, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (36, 40, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (36, 40, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (36, 40, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (36, 40, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (36, 40, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (36, 40, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (41, 45, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (41, 45, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (41, 45, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (41, 45, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (41, 45, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (41, 45, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (41, 45, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (46, 50, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (46, 50, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (46, 50, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (46, 50, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (46, 50, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (46, 50, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (46, 50, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([])),
+
+    #     (51, 55, 10, 20, "Low-Caloried Plan", "Breakfast", json.dump([])),
+    #     (51, 55, 10, 20, "Low-Caloried Plan", "Lunch", json.dump([])),
+    #     (51, 55, 10, 20, "Low-Caloried Plan", "Dinner", json.dump([])),
+    #     (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Breakfast", json.dump([])),
+    #     (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Lunch", json.dump([])),
+    #     (51, 55, 20.1, 25, "Balanced-Caloried Plan", "Dinner", json.dump([])),
+    #     (51, 55, 25.1, 35, "High-Caloried Plan", "Breakfast", json.dump([])),
+    #     (51, 55, 25.1, 35, "High-Caloried Plan", "Lunch", json.dump([])),
+    #     (51, 55, 25.1, 35, "High-Caloried Plan", "Dinner", json.dump([]))
+
+    #     # (20, 30, 18.5, 25, "Low-Calorie Plan", json.dumps([1, 2]))
+    #     # (30, 40, 22, 28, "Balanced-Calorie Plan", json.dumps([1, 3, 4]))
+    #     # (45, 60, 25, 30, "High-Caloried Plan", json.dumps([3, 5]))
+    # ]
+
+    # cursor.executemany(""" INSERT INTO MealPlans 
+    #                    (age_min, age_max, bmi_min, bmi_max, description, products_nedeed)
+    #                    VALUES (?, ?, ?, ?, ?, ?)""", 
+    #                    meal_plans)
+    
+    # cnct.commit()
+    # cnct.close()
 
 create_database()
 insert_data()
