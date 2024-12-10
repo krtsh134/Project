@@ -86,13 +86,15 @@ def open_parametrs_window():
 
 def open_main_menu():
     global main_window, parametrs_window
-    parametrs_window.destroy
+
+    parametrs_window.destroy()
+    
     main_window = tk.Tk()
     main_window.title("Главное меню")
-    main_window.geometry("400x200+400+200")
-    try:
+    main_window.geometry("400x400+550+200")
+    try: 
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        main_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
@@ -100,32 +102,32 @@ def open_main_menu():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
 
     welcome_label_3 = tk.Label(main_window, text="Что хотите посмотреть?", font=Title_Font)
-    welcome_label_3.pack(pady=20)
+    welcome_label_3.grid(row=0, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
     train_button = tk.Button(main_window, text="План тренировок", command=open_train_window, font=Button_Font)
-    train_button.pack(pady=5)
+    train_button.grid(row=1, column=1, columnspan=2, padx=20, pady=10, sticky="w")
     
     foodplan_button = tk.Button(main_window, text="План питания", command=open_foodplan_window, font=Button_Font)
-    foodplan_button.pack(pady=5)
+    foodplan_button.grid(row=2, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
     counter_kcal_button = tk.Button(main_window, text="Счетчик калорий", command=open_counter_kcal_window, font=Button_Font)
-    counter_kcal_button.pack(pady=5)
+    counter_kcal_button.grid(row=3, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
     add_data_button = tk.Button(main_window, text="Ввести новые данные в базу данных", command=open_add_data_window, font=Button_Font)
-    add_data_button.pack(pady=5)
+    add_data_button.grid(row=4, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
     edit_data_button = tk.Button(main_window, text="Изменить данные о себе", command=open_parametrs_window, font=Button_Font)
-    edit_data_button.pack(pady=5)
+    edit_data_button.grid(row=5, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
 def open_train_window():
     global main_window, train_window
-    main_window.destroy
+    main_window.destroy()
     train_window = tk.Tk()
     train_window.title("План тренировки")
-    train_window.geometry("400x200+400+200")
+    train_window.geometry("400x300+550+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        train_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
@@ -146,13 +148,13 @@ def open_train_window():
 
 def open_foodplan_window():
     global main_window, foodplan_window
-    main_window.destroy
+    main_window.destroy()
     foodplan_window = tk.Tk()
     foodplan_window.title("План питания")
     foodplan_window.geometry("400x200+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        foodplan_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
@@ -164,13 +166,13 @@ def open_foodplan_window():
 
 def open_counter_kcal_window():
     global main_window, counter_kcal_window
-    main_window.destroy
+    main_window.destroy()
     counter_kcal_window = tk.Tk()
     counter_kcal_window.title("Счетчик каллорий")
     counter_kcal_window.geometry("400x200+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        counter_kcal_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
@@ -182,13 +184,13 @@ def open_counter_kcal_window():
 
 def open_add_data_window():
     global main_window, add_data_window
-    main_window.destroy
+    main_window.destroy()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
     add_data_window.geometry("400x200+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        add_data_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
@@ -213,13 +215,13 @@ def open_add_data_window():
 
 def open_add_train_window():
     global main_window, add_data_window, add_train_window
-    add_data_window.destroy
+    add_data_window.destroy()
     add_train_window = tk.Tk()
     add_train_window.title("Добавление нового плана тренировок")
     add_train_window.geometry("400x200+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
-        hello_window.iconphoto(False, logo)
+        add_train_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
