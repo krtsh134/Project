@@ -1,6 +1,4 @@
 import sqlite3
-import json
-
 
 def create_database():
     """Creates the SQLite database and tables."""
