@@ -44,7 +44,7 @@ def create_database():
                 bmi_min INTEGER,
                 bmi_max INTEGER,
                 train_number TEXT 
-                description TEXT              
+                description_train TEXT              
             )
         """)
         cnct.commit()
@@ -450,7 +450,7 @@ def insert_data_3(train_plans):
         cursor = cnct.cursor()
         cursor.executemany("""
             INSERT OR IGNORE INTO TrainPlans 
-            (age_min, age_max, bmi_min, bmi_max, train_number, description) 
+            (age_min, age_max, bmi_min, bmi_max, train_number, description_train) 
             VALUES (?, ?, ?, ?, ?, ?)""", 
             train_plans)
         cnct.commit()
