@@ -367,6 +367,19 @@ def add_meal_plan():
         products_str = ','.join(products_list)
         add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
 
+def add_train_plan(): 
+        age_min = add_age_min_entry.get()
+        age_max = add_age_max_entry.get()
+        bmi_min = add_min_bmi_entry.get()
+        bmi_max = add_max_bmi_entry.get()
+        description = add_description_entry.get()
+        time = add_time_entry.get()
+        products_input = add_products_entry.get()
+
+        products_list = [product.strip().lower() for product in products_input.split(',')]
+        products_str = ','.join(products_list)
+        add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
+
 def open_add_foodplan_window():
     global main_window, add_data_window, add_foodplan_window, is_add_foodplan_window_open, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
     #add_data_window.destroy()

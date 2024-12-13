@@ -38,10 +38,10 @@ def create_database():
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS TrainPlans (
                 train_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                min_age INTEGER,
-                max_age INTEGER,
-                min_bmi INTEGER,
-                max_bmi INTEGER,
+                age_min INTEGER,
+                age_max INTEGER,
+                bmi_min INTEGER,
+                bmi_max INTEGER,
                 train_number TEXT 
                 description TEXT              
             )
@@ -444,6 +444,17 @@ train_plans = [
     (51, 55, 25.1, 35, "Train_3", "Разминка 7 минут, йога 45 минут - базовые упражнения на гибкость и укрепление мышц, заминка 5 минут - расслабление и глубокое дыхание"),
 ]
 
+def insert_data_3(train_plans):
+    with sqlite3.connect('health_control.db') as cnct:
+        cursor = cnct.cursor()
+        cursor.executemany("""
+            INSERT OR IGNORE INTO MealPlans 
+            (age_min, age_max, bmi_min, bmi_max, train_number, description) 
+            VALUES (?, ?, ?, ?, ?, ?)""", 
+            train_plans)
+        cnct.commit()
+
 create_database()
 insert_data_1(products)
 insert_data_2(meal_plans)
+insert_data_3(train_plans)
