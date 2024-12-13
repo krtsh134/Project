@@ -5,19 +5,10 @@ from tkinter import messagebox
 
 
 def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_needed):
-#ввод и вывод данных в консоль заменить на приложение
+
     cnct = sqlite3.connect('health_control.db')
     cursor = cnct.cursor()
 
-    # age_max = input("Введите возраст 'до': ")
-    # bmi_min = input("Введите ИМТ 'от': ")
-    # bmi_max = input("Введите ИМТ 'до': ")
-    # description = input("Введите описание: ")
-    # time = input("Введите время приёма: ")
-    # products_input = input("Введите продукты через запятую: ")
-
-    # products_list = [product.strip() for product in products_input.split(',')]
-    # products_needed = json.dumps(products_list)
     sql = """INSERT INTO MealPlans 
     (age_min, age_max, bmi_min, bmi_max, description, time, products_needed)
     VALUES (?, ?, ?, ?, ?, ?, ?)"""
@@ -33,51 +24,103 @@ def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, produc
     cnct.close()
     print("Ввод данных завершен")
 
-
-
-def get_meal_plan(age, bmi, available_foods):
+def get_meal_plan(age, bmi, available_foods_list):
     meal_plan = {'breakfast': None, 'lunch': None, 'dinner': None}
 
-    cnct = sqlite3.connect('health_control.db')
-    cursor = cnct.cursor()
+    try:
+        with sqlite3.connect('health_control.db') as cnct:
+            cursor = cnct.cursor()
+            cursor.execute("""
+            SELECT time, description, products_needed FROM MealPlans
+            WHERE age_min <= ? AND age_max >= ? AND bmi_min <= ? AND bmi_max >= ?
+            """, (age, age, bmi, bmi)) 
 
-    cursor.execute("""
-    SELECT time, description, products_needed FROM MealPlans
-    WHERE age_min <= ? AND age_max >= ? AND bmi_min <= ? AND bmi_max >= ?
-    """, (age, age, bmi, bmi)) 
+            meals = cursor.fetchall()
 
-    meals = cursor.fetchall()
-    first_meals = {'breakfast': None, 'lunch': None, 'dinner': None}
-    grouped_meals = {}
+            first_meals = {'breakfast': None, 'lunch': None, 'dinner': None}
+            grouped_meals = {}
 
-    for meal_time, description, products_needed in meals:
+            for meal_time, description, products_needed in meals:
+                if meal_time not in grouped_meals:
+                    grouped_meals[meal_time] = []
+                grouped_meals[meal_time].append((description, products_needed)) 
 
-        if meal_time not in grouped_meals:
-            grouped_meals[meal_time] = []
-        grouped_meals[meal_time].append((description, products_needed)) 
+                if first_meals[meal_time] is None:
+                    first_meals[meal_time] = (description, products_needed)
+            print(available_foods_list)
+            for meal_time in grouped_meals:
+                best_match = None
+                is_match = False
 
-        if first_meals[meal_time] is None:
-            first_meals[meal_time] = (description, products_needed)
-
-    for meal_time in grouped_meals:
-        best_match = None
-        max_matches = -1
-
-        for description, products_needed in grouped_meals[meal_time]:
-            needed_products = [product.strip().lower() for product in products_needed.split(',')]
-            matches = sum(1 for food in available_foods if food in needed_products)
+                for description, products_needed in grouped_meals[meal_time]:
+                    needed_products = set(product.strip().lower() for product in products_needed.split(','))
+                    matches = 0
+                    for food in available_foods_list:
+                        if food.lower().strip() in  ''.join(needed_products):
+                            matches+=1
+                            print( str(needed_products))
+                    # matches = sum([1 for food in available_foods_list if food.lower() in str(needed_products)])
+                    if matches > 0:
+                        best_match = (description, products_needed)
+                        is_match = True
             
-            if matches > max_matches:
-                max_matches = matches
-                best_match = (description, products_needed)
-        
-        if best_match and max_matches > 0:
-            meal_plan[meal_time] = best_match
-        
-        else:
-            meal_plan[meal_time] = first_meals[meal_time]
-    
+                if is_match:
+                    meal_plan[meal_time] = best_match
+                else:
+                    print(best_match)
+                    meal_plan[meal_time] = first_meals[meal_time]
+
+    except sqlite3.Error as e:
+        print(f"Ошибка при работе с базой данных: {e}")
+
     return meal_plan
+
+
+# def get_meal_plan(age, bmi, available_foods_list):
+#     meal_plan = {'breakfast': None, 'lunch': None, 'dinner': None}
+
+#     try:
+#         with sqlite3.connect('health_control.db') as cnct:
+#             cursor = cnct.cursor()
+#             cursor.execute("""
+#             SELECT time, description, products_needed FROM MealPlans
+#             WHERE age_min <= ? AND age_max >= ? AND bmi_min <= ? AND bmi_max >= ?
+#             """, (age, age, bmi, bmi)) 
+
+#             meals = cursor.fetchall()
+
+#             first_meals = {'breakfast': None, 'lunch': None, 'dinner': None}
+#             grouped_meals = {}
+
+#             for meal_time, description, products_needed in meals:
+#                 if meal_time not in grouped_meals:
+#                     grouped_meals[meal_time] = []
+#                 grouped_meals[meal_time].append((description, products_needed)) 
+
+#                 if first_meals[meal_time] is None:
+#                     first_meals[meal_time] = (description, products_needed)
+
+#             for meal_time in grouped_meals:
+#                 best_match = None
+#                 max_matches = -1
+
+#                 for description, products_needed in grouped_meals[meal_time]:
+#                     needed_products = set(product.strip().lower() for product in products_needed.split(','))
+#                     matches = sum(1 for food in available_foods_list if food.lower() in needed_products)
+                    
+#                     if matches > max_matches:
+#                         max_matches = matches
+#                         best_match = (description, products_needed)
+                
+#                 if best_match and max_matches > 0:
+#                     meal_plan[meal_time] = best_match
+#                 else:
+#                     meal_plan[meal_time] = first_meals[meal_time]
+
+#     except sqlite3.Error as e:
+#         print(f"Ошибка при работе с базой данных: {e}")
+
+#     return meal_plan
 
 # def recomend_meals():
 #     try:
