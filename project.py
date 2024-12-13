@@ -87,14 +87,14 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
-def back_to_main_window():
-    global main_window, add_foodplan_window, is_foodplan_window_open
+# def back_to_main_window():
+#     global main_window, add_foodplan_window, is_foodplan_window_open
     
-    if is_foodplan_window_open: 
-        foodplan_window.destroy()
-        main_window.deiconify()
-    else:
-        print("Foodplan_window is already destroyed.")
+#     if is_foodplan_window_open: 
+#         foodplan_window.destroy()
+#         main_window.deiconify()
+#     else:
+#         print("Foodplan_window is already destroyed.")
 
 def open_main_menu():
     global main_window, parametrs_window, is_main_window_open
@@ -133,10 +133,10 @@ def open_main_menu():
     edit_data_button = tk.Button(main_window, text="Изменить данные о себе", command=open_parametrs_window, font=Button_Font)
     edit_data_button.grid(row=5, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
-def close_main_window():
-    global is_main_window_open
-    main_window.destroy()
-    is_main_window_open = False
+# def close_main_window():
+#     global is_main_window_open
+#     main_window.destroy()
+#     is_main_window_open = False
 
 def open_train_window():
     global main_window, train_window
@@ -167,8 +167,6 @@ def open_train_window():
 
 def display_meal_plan():
     try:
-        age = int(age_entry.get())
-        bmi = float(bmi_entry.get())
         available_foods_input = available_foods_entry.get()
 
         available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
@@ -176,17 +174,20 @@ def display_meal_plan():
 
         meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
 
+        result_text.delete(1.0, tk.END)
+
         if meal_plan_str:
-            messagebox.showinfo("Ваш план питания!", meal_plan_str)
+            result_text.insert(tk.END, meal_plan_str)
         else:
-            messagebox.showerror("Нет подходящих планов питания")
+            result_text.insert(tk.END, "Нет подходящих планов питания")
     except ValueError:
-        messagebox.showerror("Ошибка ввода", "Пожалуйста, введите корректные значения для возраста и ИМТ.")
+        result_text.delete(1.0, tk.END)
+        result_text.insert(tk.END, "Ошибка ввода: Пожалуйста, введите корректные значения для возраста и ИМТ.")
 
 def open_foodplan_window():
-    global main_window, foodplan_window, available_foods_entry, result_text, is_foodplan_window_open, age_entry, bmi_entry, available_foods_entry, result_text
-    #main_window.destroy()
-    is_foodplan_window_open = True
+    global main_window, foodplan_window, available_foods_entry, result_text, age_entry, bmi, available_foods_entry, result_text
+    main_window.withdraw()
+
     foodplan_window = tk.Tk()
     foodplan_window.title("План питания")
     foodplan_window.geometry("500x600+400+200")
@@ -202,15 +203,7 @@ def open_foodplan_window():
 
     welcome_label_5 = tk.Label(foodplan_window, text="Ваш план питания на сегодня", font=Title_Font)
     welcome_label_5.pack(pady=20)
-
-    tk.Label(foodplan_window, text="Введите Ваш возраст:").pack(pady=5)
-    age_entry = tk.Entry(foodplan_window)
-    age_entry.pack(pady=5)
-
-    tk.Label(foodplan_window, text="Введите Ваш ИМТ:").pack(pady=5)
-    bmi_entry = tk.Entry(foodplan_window)
-    bmi_entry.pack(pady=5)
-
+    
     foodplan_window_label = tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:")
     foodplan_window_label.pack(pady=5)
     available_foods_entry = tk.Entry(foodplan_window)
@@ -222,25 +215,12 @@ def open_foodplan_window():
     result_text = tk.Text(foodplan_window, width=50, height=10)
     result_text.pack(pady=10)
 
-    main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=back_to_main_window, font=Button_Font)
+    main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=return_to_main_window, font=Button_Font)
     main_menu_button.pack(pady=5)
 
-    # def get_meal_plan():
-
-    #     age = int(age_entry.get())
-    #     bmi = float(bmi_entry.get())
-    #     available_foods_input = available_foods_entry.get()
-
-    #     available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
-
-    #     meal_plan = get_meal_plan(age, bmi, available_foods_list)
-
-    #     meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
-
-    #     if meal_plan_str:
-    #         messagebox.showinfo("План питания успешно добавлен")
-    #     else:
-    #         messagebox.showerror("Нет подходящих планов питания")
+def return_to_main_window():
+    foodplan_window.destroy()
+    main_window.deiconify()
 
 def open_counter_kcal_window():
     global main_window, counter_kcal_window
@@ -263,7 +243,7 @@ def open_counter_kcal_window():
 def open_add_data_window():
     global main_window, add_data_window, is_add_data_window_open
     is_add_data_window_open = True
-    close_main_window()
+    # close_main_window()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
     add_data_window.geometry("500x300+400+200")
@@ -344,14 +324,14 @@ def open_add_train_window():
 #     else:
 #         print("Add_data window is already destroyed.")
 
-def back_to_add_data_window():
-    global main_window, add_foodplan_window, is_add_foodplan_window_open
+# def back_to_add_data_window():
+#     global main_window, add_foodplan_window, is_add_foodplan_window_open
     
-    if is_add_foodplan_window_open: 
-        add_foodplan_window.destroy()
-        add_data_window.deiconify()
-    else:
-        print("Add_foodplan_window is already destroyed.")
+#     if is_add_foodplan_window_open: 
+#         add_foodplan_window.destroy()
+#         add_data_window.deiconify()
+#     else:
+#         print("Add_foodplan_window is already destroyed.")
 
 #добавить план питания в бд готова, мб есть недочёты с перескакиванием из окна add_data в окно add_foodplan, надо пофиксить
 def add_meal_plan(): 
@@ -367,23 +347,10 @@ def add_meal_plan():
         products_str = ','.join(products_list)
         add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
 
-def add_train_plan(): 
-        age_min = add_age_min_entry.get()
-        age_max = add_age_max_entry.get()
-        bmi_min = add_min_bmi_entry.get()
-        bmi_max = add_max_bmi_entry.get()
-        description = add_description_entry.get()
-        time = add_time_entry.get()
-        products_input = add_products_entry.get()
-
-        products_list = [product.strip().lower() for product in products_input.split(',')]
-        products_str = ','.join(products_list)
-        add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
-
 def open_add_foodplan_window():
-    global main_window, add_data_window, add_foodplan_window, is_add_foodplan_window_open, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
-    #add_data_window.destroy()
-    is_add_foodplan_window_open = True
+    global main_window, add_data_window, add_foodplan_window, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
+
+    add_data_window.withdraw()
     add_foodplan_window = tk.Tk()
     add_foodplan_window.title("Добавление нового плана питания")
     add_foodplan_window.geometry("500x400+400+200")
@@ -438,8 +405,12 @@ def open_add_foodplan_window():
     add_foodplan_button = tk.Button(add_foodplan_window, text="Добавить план питания", command=add_meal_plan)
     add_foodplan_button.grid(row=10, columnspan=3, pady=20)
 
-    to_add_data_window_button = tk.Button(add_foodplan_window, text="Назад", command=back_to_add_data_window)
+    to_add_data_window_button = tk.Button(add_foodplan_window, text="Назад", command=return_to_add_data_window)
     to_add_data_window_button.grid(row=11, columnspan=3, pady=(5, 20))
+
+def return_to_add_data_window():
+    add_foodplan_window.destroy()
+    add_data_window.deiconify()
 
     # Ксюшина часть
 #def open_add_newfood_window():
