@@ -1,6 +1,7 @@
 import sqlite3
 import json
 
+
 def create_database():
     """Creates the SQLite database and tables."""
     with sqlite3.connect('health_control.db') as cnct:
@@ -448,7 +449,7 @@ def insert_data_3(train_plans):
     with sqlite3.connect('health_control.db') as cnct:
         cursor = cnct.cursor()
         cursor.executemany("""
-            INSERT OR IGNORE INTO MealPlans 
+            INSERT OR IGNORE INTO TrainPlans 
             (age_min, age_max, bmi_min, bmi_max, train_number, description) 
             VALUES (?, ?, ?, ?, ?, ?)""", 
             train_plans)
