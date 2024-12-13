@@ -36,13 +36,14 @@ def create_database():
         cnct.commit()
 
         cursor.execute("""
-            CREATE TABLE IF NOT EXISTS UserProfiles (
-                user_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                height INTEGER,
-                weight INTEGER,
-                gender INTEGER,
-                age INTEGER,
-                user_products TEXT             
+            CREATE TABLE IF NOT EXISTS TrainPlans (
+                train_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                min_age INTEGER,
+                max_age INTEGER,
+                min_bmi INTEGER,
+                max_bmi INTEGER,
+                train_number TEXT 
+                description TEXT              
             )
         """)
         cnct.commit()
