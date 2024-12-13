@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
+#import db
 
 def open_hello_window():
     global hello_window
@@ -69,13 +70,14 @@ def open_parametrs_window():
     gender_menu.grid(row=4,column=2, padx=20, pady=5, sticky="w")
 
     def save_data():
-        global height, weight, age, gender
+        global height, weight, age, gender, bmi
         try:
             height = float(height_entry.get())
             weight = float(weight_entry.get())
             age = float(age_entry.get())
             gender = gender_var.get()
-            print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gender}")
+            bmi = height/(weight**2)
+            print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gender}, ИМТ: {bmi}")
             open_main_menu()
         except ValueError:
             print("Ошибка: Введите числовые значения.")
@@ -85,10 +87,21 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
+def back_to_main_window():
+    global main_window, add_foodplan_window, is_foodplan_window_open
+    
+    if is_foodplan_window_open: 
+        foodplan_window.destroy()
+        main_window.deiconify()
+    else:
+        print("Foodplan_window is already destroyed.")
+
 def open_main_menu():
-    global main_window, parametrs_window
+    global main_window, parametrs_window, is_main_window_open
 
     parametrs_window.destroy()
+
+    is_main_window_open = True
     
     main_window = tk.Tk()
     main_window.title("Главное меню")
@@ -120,6 +133,11 @@ def open_main_menu():
     edit_data_button = tk.Button(main_window, text="Изменить данные о себе", command=open_parametrs_window, font=Button_Font)
     edit_data_button.grid(row=5, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
+def close_main_window():
+    global is_main_window_open
+    main_window.destroy()
+    is_main_window_open = False
+
 def open_train_window():
     global main_window, train_window
     main_window.destroy()
@@ -147,13 +165,91 @@ def open_train_window():
     main_menu_button = tk.Button(train_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
     main_menu_button.pack(pady=5)
 
+# def open_foodplan_window():
+#     global main_window, foodplan_window, age_entry, bmi_entry, available_foods_entry, result_text
+#     main_window.destroy()
+#     foodplan_window = tk.Tk()
+#     foodplan_window.title("План питания")
+#     foodplan_window.geometry("400x200+400+200")
+    
+#     try:
+#         logo = tk.PhotoImage(file='logo.png')
+#         foodplan_window.iconphoto(False, logo)
+#     except tk.TclError:
+#         print("Warning: logo.png not found.")
+
+#     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
+#     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
+
+#     welcome_label_5 = tk.Label(foodplan_window, text="Ваш план питания на сегодня", font=Title_Font)
+#     welcome_label_5.pack(pady=20)
+
+#     tk.Label(foodplan_window, text="Введите Ваш возраст:").pack(pady=5)
+#     age_entry = tk.Entry(foodplan_window)
+#     age_entry.pack(pady=5)
+
+#     tk.Label(foodplan_window, text="Введите Ваш ИМТ:").pack(pady=5)
+#     bmi_entry = tk.Entry(foodplan_window)
+#     bmi_entry.pack(pady=5)
+
+#     tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:").pack(pady=5)
+#     available_foods_entry = tk.Entry(foodplan_window)
+#     available_foods_entry.pack(pady=5)
+
+#     get_recom = tk.Button(foodplan_window, text="Получить план питания", command=get_meal_plan_from_ui)
+#     get_recom.pack(pady=20)
+
+#     result_text = tk.Text(foodplan_window, width=50, height=10)
+#     result_text.pack(pady=10)
+
+#     main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+#     main_menu_button.pack(pady=5)
+
+# def get_meal_plan_from_ui():
+#     try:
+#         age = int(age_entry.get())
+#         bmi = float(bmi_entry.get())
+#         available_foods_input = available_foods_entry.get()
+
+#         available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
+#         meal_plan = get_meal_plan(age, bmi, available_foods_list)
+
+#         meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
+
+#         if meal_plan_str:
+#             result_text.delete(1.0, tk.END)  # Очистить текстовое поле перед выводом
+#             result_text.insert(tk.END, meal_plan_str)  # Отобразить план питания
+#             messagebox.showinfo("План питания успешно добавлен")
+#         else:
+#             messagebox.showerror("Нет подходящих планов питания")
+    
+#     except ValueError:
+#         messagebox.showerror("Ошибка ввода", "Пожалуйста, введите корректные значения для возраста и ИМТ.")
+
+def display_meal_plan(age, bmi, available_foods_list):
+        
+    # age = int(age_entry.get())
+    # bmi = float(bmi_entry.get())
+    available_foods_input = available_foods_entry.get()
+
+    available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
+
+    meal_plan = get_meal_plans(age, bmi, available_foods_list)
+
+    meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
+
+    if meal_plan_str:
+        messagebox.showinfo("Ваш план питания!")
+    else:
+        messagebox.showerror("Нет подходящих планов питания)")
+
 def open_foodplan_window():
-    global main_window, foodplan_window, age_entry, bmi_entry, available_foods_entry, result_text
-    main_window.destroy()
+    global main_window, foodplan_window, available_foods_entry, result_text, is_foodplan_window_open
+    #main_window.destroy()
+    is_foodplan_window_open = True
     foodplan_window = tk.Tk()
     foodplan_window.title("План питания")
-    foodplan_window.geometry("400x200+400+200")
-    
+    foodplan_window.geometry("500x600+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         foodplan_window.iconphoto(False, logo)
@@ -162,51 +258,54 @@ def open_foodplan_window():
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
+    Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
     welcome_label_5 = tk.Label(foodplan_window, text="Ваш план питания на сегодня", font=Title_Font)
-    welcome_label_5.pack(pady=20)
+    welcome_label_5.pack(pady=20) 
 
-    tk.Label(foodplan_window, text="Введите Ваш возраст:").pack(pady=5)
-    age_entry = tk.Entry(foodplan_window)
-    age_entry.pack(pady=5)
+    # tk.Label(foodplan_window, text = "Введите Ваш возраст:").pack(pady = 5)
+    # age_entry = tk.Entry(foodplan_window)
+    # age_entry.pack(pady=5)
 
-    tk.Label(foodplan_window, text="Введите Ваш ИМТ:").pack(pady=5)
-    bmi_entry = tk.Entry(foodplan_window)
-    bmi_entry.pack(pady=5)
+    # tk.Label(foodplan_window, text = "Введите Ваш ИМТ:").pack(pady = 5)
+    # bmi_entry = tk.Entry(foodplan_window)
+    # bmi_entry.pack(pady=5)
 
-    tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:").pack(pady=5)
+
+    foodplan_window_label = tk.Label(foodplan_window, text = "Введите Ваши продукты через запятую:")
+    foodplan_window_label.pack(pady = 5)
     available_foods_entry = tk.Entry(foodplan_window)
     available_foods_entry.pack(pady=5)
 
-    get_recom = tk.Button(foodplan_window, text="Получить план питания", command=get_meal_plan_from_ui)
+    button = tk.Button(open_foodplan_window, text="Получить план питания", command=lambda: display_meal_plan(age, bmi, available_foods_list))
+   
+
+
+    get_recom = tk.Button(foodplan_window, text = "Получить план питания", command = display_meal_plan)
     get_recom.pack(pady=20)
 
-    result_text = tk.Text(foodplan_window, width=50, height=10)
-    result_text.pack(pady=10)
+    result_text = tk.Text(foodplan_window, width = 50, height = 10)
+    result_text.pack(pady = 10)
 
-    main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+    main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=back_to_main_window, font=Button_Font) 
     main_menu_button.pack(pady=5)
 
-def get_meal_plan_from_ui():
-    try:
-        age = int(age_entry.get())
-        bmi = float(bmi_entry.get())
-        available_foods_input = available_foods_entry.get()
+    # def get_meal_plan():
 
-        available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
-        meal_plan = get_meal_plan(age, bmi, available_foods_list)
+    #     age = int(age_entry.get())
+    #     bmi = float(bmi_entry.get())
+    #     available_foods_input = available_foods_entry.get()
 
-        meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
+    #     available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
 
-        if meal_plan_str:
-            result_text.delete(1.0, tk.END)  # Очистить текстовое поле перед выводом
-            result_text.insert(tk.END, meal_plan_str)  # Отобразить план питания
-            messagebox.showinfo("План питания успешно добавлен")
-        else:
-            messagebox.showerror("Нет подходящих планов питания")
-    
-    except ValueError:
-        messagebox.showerror("Ошибка ввода", "Пожалуйста, введите корректные значения для возраста и ИМТ.")
+    #     meal_plan = get_meal_plan(age, bmi, available_foods_list)
+
+    #     meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
+
+    #     if meal_plan_str:
+    #         messagebox.showinfo("План питания успешно добавлен")
+    #     else:
+    #         messagebox.showerror("Нет подходящих планов питания")
 
 def open_counter_kcal_window():
     global main_window, counter_kcal_window
@@ -227,11 +326,12 @@ def open_counter_kcal_window():
     # Лизина часть
 
 def open_add_data_window():
-    global main_window, add_data_window
-    main_window.destroy()
+    global main_window, add_data_window, is_add_data_window_open
+    is_add_data_window_open = True
+    close_main_window()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
-    add_data_window.geometry("400x200+400+200")
+    add_data_window.geometry("500x300+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         add_data_window.iconphoto(False, logo)
@@ -248,8 +348,8 @@ def open_add_data_window():
     add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window, font=Button_Font) 
     add_train_button.pack(pady=5)
 
-    # add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
-    # add_foodplan_button.pack(pady=5) Ксюшина часть
+    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
+    add_foodplan_button.pack(pady=5) #Ксюшина часть
 
     # add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
     # add_newfood_button.pack(pady=5) Лизина часть
@@ -299,14 +399,46 @@ def open_add_train_window():
     main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
     main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-#def open_add_foodplan_window():
-    # Ксюшина часть
+
+# def back_to_main_window():
+#     global main_window, add_foodplan_window, is_main_window_open
+    
+#     if is_main_window_open: 
+#         add_foodplan_window.destroy()
+#         main_window.deiconify()
+#     else:
+#         print("Add_data window is already destroyed.")
+
+def back_to_add_data_window():
+    global main_window, add_foodplan_window, is_add_foodplan_window_open
+    
+    if is_add_foodplan_window_open: 
+        add_foodplan_window.destroy()
+        add_data_window.deiconify()
+    else:
+        print("Add_foodplan_window is already destroyed.")
+
+#добавить план питания в бд готова, мб есть недочёты с перескакиванием из окна add_data в окно add_foodplan, надо пофиксить
+def add_meal_plan(): 
+        age_min = add_age_min_entry.get()
+        age_max = add_age_max_entry.get()
+        bmi_min = add_min_bmi_entry.get()
+        bmi_max = add_max_bmi_entry.get()
+        description = add_description_entry.get()
+        time = add_time_entry.get()
+        products_input = add_products_entry.get()
+
+        products_list = [product.strip().lower() for product in products_input.split(',')]
+        products_str = ','.join(products_list)
+        add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
+
 def open_add_foodplan_window():
-    global main_window, add_data_window, add_foodplan_window
-    add_data_window.destroy()
+    global main_window, add_data_window, add_foodplan_window, is_add_foodplan_window_open, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
+    #add_data_window.destroy()
+    is_add_foodplan_window_open = True
     add_foodplan_window = tk.Tk()
     add_foodplan_window.title("Добавление нового плана питания")
-    add_foodplan_window.geometry("400x200+400+200")
+    add_foodplan_window.geometry("500x400+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         add_foodplan_window.iconphoto(False, logo)
@@ -317,63 +449,51 @@ def open_add_foodplan_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label_9 = tk.Label(add_data_window, text="Добавьте новый план питания", font=Title_Font)
+    welcome_label_9 = tk.Label(add_foodplan_window, text="Добавьте новый план питания", font=Title_Font)
     welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
 
-    new_foodplan_label = tk.Label(add_foodplan_window, text="Добавьте новый план питания:", font=Message_Font)
-    new_foodplan_label.grid(row=2,column=1, padx=20, pady=5, sticky="w")
-    new_foodplan_entry = tk.Entry(add_foodplan_window)
-    new_foodplan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
-
-    add_min_age_label = tk.Label(add_foodplan_window, text = 'Введите возраст (от): ')
-    add_min_age_label.pack(pady = 5)
+    add_min_age_label = tk.Label(add_foodplan_window, text='Введите возраст (от): ')
+    add_min_age_label.grid(row=3, column=1, pady=5, sticky="w")
     add_age_min_entry = tk.Entry(add_foodplan_window)
-    add_age_min_entry.pack(pady = 5)
+    add_age_min_entry.grid(row=3, column=2, pady=5, sticky="e")
 
-    add_max_age_label = tk.Label(add_foodplan_window, text = 'Введите возраст (до): ')
-    add_max_age_label.pack(pady=5)
+    add_max_age_label = tk.Label(add_foodplan_window, text='Введите возраст (до): ')
+    add_max_age_label.grid(row=4, column=1, pady=5, sticky="w")
     add_age_max_entry = tk.Entry(add_foodplan_window)
-    add_age_max_entry.pack(pady = 5)
+    add_age_max_entry.grid(row=4, column=2, pady=5, sticky="e")
 
-    add_min_bmi_label = tk.Label(add_foodplan_window, text = 'Введите ИМТ (от): ')
-    add_min_bmi_label.pack(pady=5)
+    add_min_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (от): ')
+    add_min_bmi_label.grid(row=5, column=1, pady=5, sticky="w")
     add_min_bmi_entry = tk.Entry(add_foodplan_window)
-    add_min_bmi_entry.pack(pady = 5)
+    add_min_bmi_entry.grid(row=5, column=2, pady=5, sticky="e")
 
-    add_max_bmi_label = tk.Label(add_foodplan_window, text = 'Введите ИМТ (до): ')
-    add_max_bmi_label.pack(pady=5)
+    add_max_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (до): ')
+    add_max_bmi_label.grid(row=6, column=1, pady=5, sticky="w")
     add_max_bmi_entry = tk.Entry(add_foodplan_window)
-    add_max_bmi_entry.pack(pady = 5)
+    add_max_bmi_entry.grid(row=6, column=2, pady=5, sticky="e")
 
-    add_description_label = tk.Label(add_foodplan_window, text = 'Введите описание: ')
-    add_description_label.pack(pady=5)
+    add_description_label = tk.Label(add_foodplan_window, text='Введите описание: ')
+    add_description_label.grid(row=7, column=1, pady=5, sticky="w")
     add_description_entry = tk.Entry(add_foodplan_window)
-    add_description_entry.pack(pady = 5)
+    add_description_entry.grid(row=7, column=2, pady=5, sticky="e")
 
-    add_time_label = tk.Label(add_foodplan_window, text = 'Введите время приёма: ')
-    add_time_label.pack(pady=5)
+    add_time_label = tk.Label(add_foodplan_window, text='Введите время приёма: ')
+    add_time_label.grid(row=8, column=1, pady=5, sticky="w")
     add_time_entry = tk.Entry(add_foodplan_window)
-    add_time_entry.pack(pady = 5)
+    add_time_entry.grid(row=8, column=2, pady=5, sticky="e")
 
-    add_products_label = tk.Label(add_foodplan_window, text = 'Введите продукты (через запятую): ')
-    add_products_label.pack(pady=5)
+    add_products_label = tk.Label(add_foodplan_window, text='Введите продукты (через запятую): ')
+    add_products_label.grid(row=9, column=1, pady=5, sticky="w")
     add_products_entry = tk.Entry(add_foodplan_window)
-    add_products_entry.pack(pady = 5)
+    add_products_entry.grid(row=9, column=2, pady=5, sticky="e")
 
-    add_foodplan_button = tk.Button(add_foodplan_window, text = "Добавить план питания", command = add_meal_plan)
-    add_foodplan_button.pack(pady = 20)
+    add_foodplan_button = tk.Button(add_foodplan_window, text="Добавить план питания", command=add_meal_plan)
+    add_foodplan_button.grid(row=10, columnspan=3, pady=20)
 
-    def add_meal_plan():
-        age_min = add_age_min_entry.get()
-        age_max = add_age_max_entry.get()
-        bmi_min = add_min_bmi_entry.get()
-        bmi_max = add_max_bmi_entry.get()
-        description = add_description_entry.get()
-        time = add_time_entry.get()
-        products_input = add_products_entry.get()
+    to_add_data_window_button = tk.Button(add_foodplan_window, text="Назад", command=back_to_add_data_window)
+    to_add_data_window_button.grid(row=11, columnspan=3, pady=(5, 20))
 
-        products_list = [product.strip().lower() for product in products_input.split(',')]
-        add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_list)
+    # Ксюшина часть
 #def open_add_newfood_window():
     # Лизина часть
 
