@@ -26,7 +26,7 @@ def open_hello_window():
     next_button.pack(pady=10)
 
 def open_parametrs_window():
-    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gender
+    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gender, bmi
 
     hello_window.destroy()
     
@@ -76,7 +76,7 @@ def open_parametrs_window():
             weight = float(weight_entry.get())
             age = float(age_entry.get())
             gender = gender_var.get()
-            bmi = height/(weight**2)
+            bmi = weight/(height/100)**2
             print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gender}, ИМТ: {bmi}")
             open_main_menu()
         except ValueError:
@@ -87,14 +87,6 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
-# def back_to_main_window():
-#     global main_window, add_foodplan_window, is_foodplan_window_open
-    
-#     if is_foodplan_window_open: 
-#         foodplan_window.destroy()
-#         main_window.deiconify()
-#     else:
-#         print("Foodplan_window is already destroyed.")
 
 def open_main_menu():
     global main_window, parametrs_window, is_main_window_open
@@ -140,7 +132,7 @@ def open_main_menu():
 
 def open_train_window():
     global main_window, train_window
-    main_window.destroy()
+    #main_window.destroy()
     train_window = tk.Tk()
     train_window.title("План тренировки")
     train_window.geometry("400x300+550+200")
@@ -224,7 +216,7 @@ def return_to_main_window():
 
 def open_counter_kcal_window():
     global main_window, counter_kcal_window
-    main_window.destroy()
+    #main_window.destroy()
     counter_kcal_window = tk.Tk()
     counter_kcal_window.title("Счетчик каллорий")
     counter_kcal_window.geometry("400x200+400+200")
@@ -315,37 +307,20 @@ def open_add_train_window():
     main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
 
-# def back_to_main_window():
-#     global main_window, add_foodplan_window, is_main_window_open
-    
-#     if is_main_window_open: 
-#         add_foodplan_window.destroy()
-#         main_window.deiconify()
-#     else:
-#         print("Add_data window is already destroyed.")
 
-# def back_to_add_data_window():
-#     global main_window, add_foodplan_window, is_add_foodplan_window_open
-    
-#     if is_add_foodplan_window_open: 
-#         add_foodplan_window.destroy()
-#         add_data_window.deiconify()
-#     else:
-#         print("Add_foodplan_window is already destroyed.")
-
-#добавить план питания в бд готова, мб есть недочёты с перескакиванием из окна add_data в окно add_foodplan, надо пофиксить
+#добавить план питания в бд готова
 def add_meal_plan(): 
-        age_min = add_age_min_entry.get()
-        age_max = add_age_max_entry.get()
-        bmi_min = add_min_bmi_entry.get()
-        bmi_max = add_max_bmi_entry.get()
-        description = add_description_entry.get()
-        time = add_time_entry.get()
-        products_input = add_products_entry.get()
+    age_min = add_age_min_entry.get()
+    age_max = add_age_max_entry.get()
+    bmi_min = add_min_bmi_entry.get()
+    bmi_max = add_max_bmi_entry.get()
+    description = add_description_entry.get()
+    time = add_time_entry.get()
+    products_input = add_products_entry.get()
 
-        products_list = [product.strip().lower() for product in products_input.split(',')]
-        products_str = ','.join(products_list)
-        add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
+    products_list = [product.strip().lower() for product in products_input.split(',')]
+    products_str = ','.join(products_list)
+    add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
 
 def open_add_foodplan_window():
     global main_window, add_data_window, add_foodplan_window, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
