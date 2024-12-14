@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
+from Train_plans import *
 from count_nutritional_value import *
 from count_nutritional_value import add_newfoods
 #import db
@@ -28,10 +29,16 @@ def open_hello_window():
     next_button.pack(pady=10)
 
 def open_parametrs_window():
+<<<<<<< Updated upstream
     global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gender, bmi
+=======
+    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gender, is_parametrs_window_open
+>>>>>>> Stashed changes
 
     hello_window.destroy()
     
+    is_parametrs_window_open = True
+
     parametrs_window = tk.Tk()
     parametrs_window.title("Ваши параметры")
     parametrs_window.geometry("300x300+600+200")
@@ -78,7 +85,11 @@ def open_parametrs_window():
             weight = float(weight_entry.get())
             age = float(age_entry.get())
             gender = gender_var.get()
+<<<<<<< Updated upstream
             bmi = weight/(height/100)**2
+=======
+            bmi = round(weight/((height/100)**2), -1)
+>>>>>>> Stashed changes
             print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gender}, ИМТ: {bmi}")
             open_main_menu()
         except ValueError:
@@ -91,15 +102,16 @@ def open_parametrs_window():
 
 
 def open_main_menu():
-    global main_window, parametrs_window, is_main_window_open
+    global main_window, parametrs_window, is_main_window_open, is_parametrs_window_open
 
-    parametrs_window.destroy()
+    if is_parametrs_window_open:
+        parametrs_window.destroy()
 
     is_main_window_open = True
     
     main_window = tk.Tk()
     main_window.title("Главное меню")
-    main_window.geometry("400x400+550+200")
+    main_window.geometry("400x330+550+100")
     try: 
         logo = tk.PhotoImage(file='logo.png')
         main_window.iconphoto(False, logo)
@@ -124,20 +136,47 @@ def open_main_menu():
     add_data_button = tk.Button(main_window, text="Ввести новые данные в базу данных", command=open_add_data_window, font=Button_Font)
     add_data_button.grid(row=4, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
-    edit_data_button = tk.Button(main_window, text="Изменить данные о себе", command=open_parametrs_window, font=Button_Font)
-    edit_data_button.grid(row=5, column=1, columnspan=2, padx=20, pady=10, sticky="w")
-
 # def close_main_window():
 #     global is_main_window_open
 #     main_window.destroy()
 #     is_main_window_open = False
 
+def display_train_plan():
+    try:
+        results = get_train_plans(age, bmi, gender)
+
+        if results:
+            result_text_1.delete("1.0", tk.END)
+            result_text_2.delete("1.0", tk.END)
+
+            if results['Train_1']:
+                result_text_1.insert(tk.END, f"Train_1\n{results['Train_1']}")
+            else:
+                result_text_1.insert(tk.END, "План тренировки 1 не найден")
+            if results['Train_2']:
+                result_text_2.insert(tk.END, f"Train_2\n{results['Train_2']}")
+            else:
+                result_text_2.insert(tk.END, "План тренировки 2 не найден")
+        else:
+            result_text_1.insert(tk.END, "Ошибка при извлечении данных.")
+            result_text_2.insert(tk.END, "")
+    except ValueError:
+        result_text_1.insert(tk.END, "Неверный формат ввода возраста или ИМТ")
+    except Exception as e:
+        result_text_1.insert(tk.END, f"Произошла ошибка: {e}")
+
 def open_train_window():
+<<<<<<< Updated upstream
     global main_window, train_window
     #main_window.destroy()
+=======
+    global main_window, train_window, result_text_1, result_text_2, age_entry, bmi
+    main_window.withdraw()
+
+>>>>>>> Stashed changes
     train_window = tk.Tk()
     train_window.title("План тренировки")
-    train_window.geometry("400x300+550+200")
+    train_window.geometry("600x750+450+100")
     try:
         logo = tk.PhotoImage(file='logo.png')
         train_window.iconphoto(False, logo)
@@ -151,13 +190,21 @@ def open_train_window():
     welcome_label_4 = tk.Label(train_window, text="Ваша тренировка на сегодня", font=Title_Font)
     welcome_label_4.pack(pady=20)
 
-    # label с тренировкой из бд - после добавления моей бд добавлю lable, надо понять как подключить бд к функции
+    get_plan = tk.Button(train_window, text="Получить тренировку", command=display_train_plan, font=Button_Font)
+    get_plan.pack(pady=20)
 
-    # next_train_button = tk.Button(train_window, text="Следующая тренировка", command=, font=Button_Font) # сменяет тренировку, добавить команду
-    # next_train_button.pack(pady=5) - нужно или нет?
+    result_text_1 = tk.Text(train_window, width=50, height=10, font=Message_Font)
+    result_text_1.pack(pady=10)
 
-    main_menu_button = tk.Button(train_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+    result_text_2 = tk.Text(train_window, width=50, height=10, font=Message_Font)
+    result_text_2.pack(pady=10)
+
+    main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu, font=Button_Font) 
     main_menu_button.pack(pady=5)
+
+def return_to_main_menu():
+    train_window.destroy()
+    main_window.deiconify()
 
 def display_meal_plan():
     try:
@@ -391,6 +438,7 @@ def return_to_add_data_window():
     add_data_window.deiconify()
 
     # Ксюшина часть
+
 def add_newfood():
     name = add_name_entry.get()
     kilocalories= add_kilocalories_entry.get()
