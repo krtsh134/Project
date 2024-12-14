@@ -28,8 +28,8 @@ def add_train_plans(age_min, age_max, bmi_min, bmi_max, train_number, gendr, des
 
 
 def get_train_plans(age, bmi, gendr):
-    trains_plan = {'Train_1': None, 'Train_2': None}
-
+    """Получает тренировочные планы на основе возраста, ИМТ и пола."""
+    trains_plan = []
     try:
         with sqlite3.connect('health_control.db') as cnct:
             cursor = cnct.cursor()
@@ -37,20 +37,11 @@ def get_train_plans(age, bmi, gendr):
                 SELECT train_number, description_train FROM TrainPlans 
                 WHERE age_min <= ? AND age_max >= ? AND bmi_min <= ? AND bmi_max >= ? AND gendr = ?
                 ORDER BY train_number
-                """, (age, age, bmi, bmi, gendr)) 
-
+            """, (age, age, bmi, bmi, gendr)) 
             trains = cursor.fetchall()
-            if trains:
-                print(trains[0])
-                for train_number, description_train in trains:
-                    if train_number in trains_plan:
-                        trains_plan[train_number] = description_train
-
-                        if train_number == "Train_2":
-                            break
-
+            for train_number, description_train in trains:
+                trains_plan.append((train_number, description_train))
     except sqlite3.Error as e:
         print(f"Ошибка при работе с базой данных: {e}")
         return None
-
     return trains_plan
