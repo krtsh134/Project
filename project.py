@@ -5,7 +5,7 @@ from MealPlans import *
 from Train_plans import *
 from count_nutritional_value import *
 from count_nutritional_value import add_newfoods
-#import db
+from db import *
 
 def open_hello_window():
     global hello_window
@@ -263,12 +263,14 @@ def return_to_main_window():
     foodplan_window.destroy()
     main_window.deiconify()
 
+
 def open_counter_kcal_window():
-    global main_window, counter_kcal_window
-    #main_window.destroy()
+    global main_window, counter_kcal_window, name_entry, size_entry, product_listbox, product_list, result_label
+    main_window.withdraw()
+    product_list=[]
     counter_kcal_window = tk.Tk()
-    counter_kcal_window.title("Счетчик каллорий")
-    counter_kcal_window.geometry("400x200+400+200")
+    counter_kcal_window.title("Счетчик КБЖУ")
+    counter_kcal_window.geometry("700x500+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         counter_kcal_window.iconphoto(False, logo)
@@ -278,6 +280,105 @@ def open_counter_kcal_window():
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
+    welcome_label = tk.Label(counter_kcal_window, text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font) # Changed from main_window
+    welcome_label.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
+
+    name_label = tk.Label(counter_kcal_window, text="Введите название продукта:", font=Message_Font) # Changed from main_window
+    name_label.grid(row=1, column=0, padx=20, pady=5, sticky="w")
+    name_entry = tk.Entry(counter_kcal_window)  # Changed from main_window
+    name_entry.grid(row=1, column=1, padx=20, pady=5, sticky="e")
+
+    size_label = tk.Label(counter_kcal_window, text="Введите массу продукта (в граммах):", font=Message_Font)  # Changed from main_window
+    size_label.grid(row=2, column=0, padx=20, pady=5, sticky="w")
+    size_entry = tk.Entry(counter_kcal_window)  # Changed from main_window
+    size_entry.grid(row=2, column=1, padx=20, pady=5, sticky="e")
+
+    add_button = tk.Button(counter_kcal_window, text="Добавить ещё продукт", command=add_product_for_counting, font=Button_Font) # Changed from main_window
+    add_button.grid(row=3, column=0, padx=20, pady=10, sticky="e")
+
+    calculate_button = tk.Button(counter_kcal_window, text="Посчитать мои КБЖУ за день", command=calculate_and_display, font=Button_Font)  # Changed from main_window
+    calculate_button.grid(row=3, column=1, padx=20, pady=10, sticky="w")
+
+    product_listbox = tk.Listbox(counter_kcal_window, width=50)  # Changed from main_window
+    product_listbox.grid(row=4, column=0, columnspan=3, padx=20, pady=10, sticky="ew")
+    product_listbox.config(height=5)
+
+    result_label = tk.Label(counter_kcal_window, text="Ваши КБЖУ за день:", font=Message_Font, justify="left")  # Changed from main_window
+    result_label.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
+
+def add_product_for_counting():
+        """Adds a product to the list from the user interface, and displays it in the listbox."""
+        global name_entry, size_entry, product_listbox, product_list
+        name = name_entry.get().strip()
+        weight_str = size_entry.get().strip()
+
+        if not name or not weight_str:
+          messagebox.showerror("Input Error", "Please enter both a product name and weight.")
+          return
+        try:
+            weight = float(weight_str)
+        except ValueError:
+            messagebox.showerror("Input Error", "Please enter a valid weight.")
+            return
+
+        product_list.append((name, weight))
+        product_listbox.insert(tk.END, f"{name}: {weight}g")
+
+        # Clear input fields after adding
+        name_entry.delete(0, tk.END)
+        size_entry.delete(0, tk.END)   
+
+
+def calculate_and_display():
+    global result_label, product_list
+    try:
+        connection_db = sqlite3.connect("health_control.db")
+        cursor_object = connection_db.cursor()
+        cursor_object.execute(
+                "SELECT name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms FROM Products"
+            )
+        table_Products_contents = {row[0].lower(): row[1:] for row in cursor_object.fetchall()}
+        res_kcal = 0
+        res_protein = 0
+        res_fats = 0
+        res_carbohydrates = 0
+
+        for name, size in product_list:
+                if name.lower() in table_Products_contents:
+                    kcal, protein, fats, carbohydrates = table_Products_contents[name.lower()]
+                    count_kcal = kcal * size / 100
+                    count_protein = protein * size / 100
+                    count_fats = fats * size / 100
+                    count_carbohydrates = carbohydrates * size / 100
+                    res_kcal += count_kcal
+                    res_protein += count_protein
+                    res_fats += count_fats
+                    res_carbohydrates += count_carbohydrates
+                else:
+                    messagebox.showerror("Product Error", f"Product '{name}' not found.")
+                    return  # Exit if product is not in the database
+            #Update with calculated totals:
+        result_text = (
+                f"Килокалории: {round(res_kcal, 2)}\n"
+                f"Белки: {round(res_protein, 2)}\n"
+                f"Жиры: {round(res_fats, 2)}\n"
+                f"Углеводы: {round(res_carbohydrates, 2)}"
+            )
+        result_label.config(text=result_text)
+        product_list.clear()  #clear the list after the calculations.
+        product_listbox.delete(0,tk.END) #Clear list box after calculations.
+    except sqlite3.Error as e:
+           messagebox.showerror("Database Error", f"Database error: {e}")
+    except Exception as e:
+           messagebox.showerror("Error", f"An error occurred: {e}")
+    finally:
+           if connection_db:
+                connection_db.close()    
+
+
+  # Changed from main_window
+
+
 
     # Лизина часть
 
@@ -503,7 +604,11 @@ def open_add_newfood_window():
 def back_to_add_data_window1():
     global add_newfood_window, is_add_newfood_window_open
     add_newfood_window.destroy()
-    add_data_window.deiconify()
+    add_data_window.deiconify() 
+
+
+
+
     
 
 
