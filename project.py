@@ -538,10 +538,30 @@ def open_counter_kcal_window():
     product_listbox.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
     product_listbox.config(height=5)
     
-
-
 def add_product_for_counting(): 
-    
+    '''
+    """
+    Добавляет продукт с его массой в список для подсчета калорий.
+
+    Эта функция получает название продукта и его массу из соответствующих виджетов ввода,
+    проверяет корректность ввода, добавляет продукт и его массу в список `product_list`,
+    и отображает добавленный продукт в виджете `product_listbox`.
+
+    :global name_entry: Виджет `tk.Entry`, содержащий название продукта, введенное пользователем.
+    :type name_entry: tk.Entry
+    :global size_entry: Виджет `tk.Entry`, содержащий массу продукта (в граммах), введенную пользователем.
+    :type size_entry: tk.Entry
+    :global product_listbox: Виджет `tk.Listbox`, отображающий список добавленных продуктов.
+    :type product_listbox: tk.Listbox
+    :global product_list: Список для хранения кортежей (название продукта, масса продукта).
+    :type product_list: list
+
+    :raises tk.messagebox.showerror: Если пользователь не ввел название или вес продукта, или если вес не является числом, выводится окно с сообщением об ошибке.
+    :raises Exception: Если возникает ошибка при добавлении продукта, будет вызвано исключение.
+
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None'''
     global name_entry, size_entry, product_listbox, product_list
     name = name_entry.get().strip()
     weight_str = size_entry.get().strip()
