@@ -26,7 +26,7 @@ def open_hello_window():
 
     hello_window = tk.Tk()
     hello_window.title('Health Controller')
-    hello_window.geometry("700x150+400+200") # wise x hight + right + down
+    hello_window.geometry("700x150+400+200") 
     try:
         logo = tk.PhotoImage(file='logo.png')
         hello_window.iconphoto(False, logo)
@@ -113,7 +113,7 @@ def open_parametrs_window():
     gendr_label = tk.Label(parametrs_window, text="Пол:", font=Message_Font)
     gendr_label.grid(row=4,column=1, padx=20, pady=5, sticky="w")
     gendr_var = tk.StringVar(parametrs_window)
-    gendr_var.set("Мужской")  # Значение по умолчан
+    gendr_var.set("Мужской")  
     gendr_options = ["Мужской", "Женский"]
     gendr_menu = tk.OptionMenu(parametrs_window, gendr_var, *gendr_options)
     gendr_menu.grid(row=4,column=2, padx=20, pady=5, sticky="w")
@@ -287,29 +287,7 @@ def display_train_plan():
         result_text_1.delete(1.0, tk.END) 
         result_text_1.insert(tk.END, result)
         
-# def display_train_plan():
-#     try:
-#         results = get_train_plans(age, bmi, gendr)
 
-#         if results:
-#             result_text_1.delete("1.0", tk.END)
-#             result_text_2.delete("1.0", tk.END)
-
-#             if results['Train_1']:
-#                 result_text_1.insert(tk.END, f"Train_1\n{results['Train_1']}")
-#             else:
-#                 result_text_1.insert(tk.END, "План тренировки 1 не найден")
-#             if results['Train_2']:
-#                 result_text_2.insert(tk.END, f"Train_2\n{results['Train_2']}")
-#             else:
-#                 result_text_2.insert(tk.END, "План тренировки 2 не найден")
-#         else:
-#             result_text_1.insert(tk.END, "Ошибка при извлечении данных.")
-#             result_text_2.insert(tk.END, "")
-#     except ValueError:
-#         result_text_1.insert(tk.END, "Неверный формат ввода возраста или ИМТ")
-#     except Exception as e:
-#         result_text_1.insert(tk.END, f"Произошла ошибка: {e}")
 
 def open_train_window():
     '''
