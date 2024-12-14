@@ -40,8 +40,8 @@ def get_train_plans(age, bmi, gendr):
                 """, (age, age, bmi, bmi, gendr)) 
 
             trains = cursor.fetchall()
-
             if trains:
+                print(trains[0])
                 for train_number, description_train in trains:
                     if train_number in trains_plan:
                         trains_plan[train_number] = description_train
