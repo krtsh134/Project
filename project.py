@@ -278,12 +278,11 @@ def display_train_plan():
     plans = get_train_plans(age, bmi, gendr)
     print(plans)
     result = ""
-    if plans:
-        result += "Найдены следующие тренировочные планы:\n"
-        for plan in plans:
-            result += f"Номер тренировки: {plan[0]}\nОписание: {plan[1]}\n\n"
+    if plans is None or not plans:
+        messagebox.showinfo("Результат", "Не найдено тренировочных планов.")
     else:
-        result = "Не найдено подходящих тренировочных планов."
+        result = "\n".join([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans])
+        messagebox.showinfo("Тренировочные планы", result)
 
         result_text_1.delete(1.0, tk.END) 
         result_text_1.insert(tk.END, result)
@@ -575,12 +574,9 @@ def open_counter_kcal_window():
     product_listbox.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
     product_listbox.config(height=5)
 
-    # Лизина часть
-
 def open_add_data_window():
     global main_window, add_data_window, is_add_data_window_open
     is_add_data_window_open = True
-    # close_main_window()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
     add_data_window.geometry("500x300+400+200")
@@ -677,8 +673,7 @@ def calculate_and_display():
                     res_carbohydrates += count_carbohydrates
                 else:
                     messagebox.showerror("Product Error", f"Product '{name}' not found.")
-                    return  # Exit if product is not in the database
-            #Update with calculated totals:
+                    return  
         result_text = (
                 f"Килокалории: {round(res_kcal, 2)}\n"
                 f"Белки: {round(res_protein, 2)}\n"
@@ -686,8 +681,8 @@ def calculate_and_display():
                 f"Углеводы: {round(res_carbohydrates, 2)}"
             )
         result_label.config(text=result_text)
-        product_list.clear()  #clear the list after the calculations.
-        product_listbox.delete(0,tk.END) #Clear list box after calculations.
+        product_list.clear()  
+        product_listbox.delete(0,tk.END) 
     except sqlite3.Error as e:
            messagebox.showerror("Database Error", f"Database error: {e}")
     except Exception as e:
@@ -804,10 +799,9 @@ def open_add_train_window():
 
     add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
     add_foodplan_button.pack(pady=5)
-     #Ксюшина част
 
     add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
-    add_newfood_button.pack(pady=5) #Лизина часть
+    add_newfood_button.pack(pady=5) 
 
     main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
     main_menu_button.pack(pady=5)
@@ -873,9 +867,6 @@ def open_add_train_window():
     main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
     main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-
-
-#добавить план питания в бд готова
 def add_meal_plan(): 
     '''
     """
