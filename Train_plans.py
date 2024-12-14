@@ -17,7 +17,7 @@ def add_train_plans(age_min, age_max, bmi_min, bmi_max, train_number, gendr, des
         messagebox.showinfo("Успех", "Данные добавлены")
     
     except sqlite3.Error as e:
-        messagebox.showerror("Ошибка", f"Не удалось добавить данные: {e}") # Исправлено для tk.messagebox
+        messagebox.showerror("Ошибка", f"Не удалось добавить данные: {e}")
     except ValueError as e:
         messagebox.showerror("Ошибка", f"Неверный тип данных: {e}")
     except Exception as e:
@@ -28,17 +28,20 @@ def add_train_plans(age_min, age_max, bmi_min, bmi_max, train_number, gendr, des
 
 
 def get_train_plans(age, bmi, gendr):
+    global trains
     """Получает тренировочные планы на основе возраста, ИМТ и пола."""
     trains_plan = []
     try:
         with sqlite3.connect('health_control.db') as cnct:
             cursor = cnct.cursor()
+            print(f"Запрос: age={age}, bmi={bmi}, gendr={gendr}")  
             cursor.execute("""
                 SELECT train_number, description_train FROM TrainPlans 
                 WHERE age_min <= ? AND age_max >= ? AND bmi_min <= ? AND bmi_max >= ? AND gendr = ?
                 ORDER BY train_number
             """, (age, age, bmi, bmi, gendr)) 
             trains = cursor.fetchall()
+            print(trains)
             for train_number, description_train in trains:
                 trains_plan.append((train_number, description_train))
     except sqlite3.Error as e:
