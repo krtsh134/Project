@@ -5,7 +5,7 @@ from MealPlans import *
 from Train_plans import *
 from count_nutritional_value import *
 from count_nutritional_value import add_newfoods
-#import db
+import db
 
 
 
@@ -33,7 +33,6 @@ def open_hello_window():
 
 def open_parametrs_window():
     global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gender, is_parametrs_window_open, bmi
-
     hello_window.destroy()
     
     is_parametrs_window_open = True
@@ -41,11 +40,6 @@ def open_parametrs_window():
     parametrs_window = tk.Tk()
     parametrs_window.title("Ваши параметры")
     parametrs_window.geometry("300x300+600+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        parametrs_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -72,21 +66,21 @@ def open_parametrs_window():
     gender_label = tk.Label(parametrs_window, text="Пол:", font=Message_Font)
     gender_label.grid(row=4,column=1, padx=20, pady=5, sticky="w")
     gender_var = tk.StringVar(parametrs_window)
-    gender_var.set("Мужской")  # Значение по умолчан
+    gender_var.set("Мужской")  
     gender_options = ["Мужской", "Женский"]
     gender_menu = tk.OptionMenu(parametrs_window, gender_var, *gender_options)
     gender_menu.grid(row=4,column=2, padx=20, pady=5, sticky="w")
 
     def save_data():
-        global height, weight, age, gender, bmi
+        global height, weight, age, gendr, bmi
         try:
             height = float(height_entry.get())
             weight = float(weight_entry.get())
             age = float(age_entry.get())
-            gender = gender_var.get()
+            gendr = gender_var.get()
             bmi = round(weight/((height/100)**2), -1)
-            print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gender}, ИМТ: {bmi}")
-            open_main_menu()
+            print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gendr}, ИМТ: {bmi}")
+            from_par_to_main()
         except ValueError:
             print("Ошибка: Введите числовые значения.")
 
@@ -95,23 +89,18 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
+def from_par_to_main():
+    parametrs_window.destroy()
+    open_main_menu()
 
 def open_main_menu():
     global main_window, parametrs_window, is_main_window_open, is_parametrs_window_open
-
-    if is_parametrs_window_open:
-        parametrs_window.destroy()
 
     is_main_window_open = True
     
     main_window = tk.Tk()
     main_window.title("Главное меню")
     main_window.geometry("400x330+550+100")
-    try: 
-        logo = tk.PhotoImage(file='logo.png')
-        main_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -138,18 +127,17 @@ def open_main_menu():
 
 def display_train_plan():
     try:
-        results = get_train_plans(age, bmi, gender)
-
+        results = get_train_plans(age, bmi, gendr)
         if results:
             result_text_1.delete("1.0", tk.END)
             result_text_2.delete("1.0", tk.END)
 
             if results['Train_1']:
-                result_text_1.insert(tk.END, f"Train_1\n{results['Train_1']}")
+                result_text_1.insert(tk.END, f"Первый вариант тренировки:\n{results['Train_1']}")
             else:
                 result_text_1.insert(tk.END, "План тренировки 1 не найден")
             if results['Train_2']:
-                result_text_2.insert(tk.END, f"Train_2\n{results['Train_2']}")
+                result_text_2.insert(tk.END, f"Второй вариант тренировки:\n{results['Train_2']}")
             else:
                 result_text_2.insert(tk.END, "План тренировки 2 не найден")
         else:
@@ -165,12 +153,7 @@ def open_train_window():
     main_window.withdraw()
     train_window = tk.Tk()
     train_window.title("План тренировки")
-    train_window.geometry("600x750+450+100")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        train_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    train_window.geometry("600x750+450+50")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -220,12 +203,7 @@ def open_foodplan_window():
 
     foodplan_window = tk.Tk()
     foodplan_window.title("План питания")
-    foodplan_window.geometry("500x600+400+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        foodplan_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    foodplan_window.geometry("500x450+450+200")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -234,12 +212,12 @@ def open_foodplan_window():
     welcome_label_5 = tk.Label(foodplan_window, text="Ваш план питания на сегодня", font=Title_Font)
     welcome_label_5.pack(pady=20)
     
-    foodplan_window_label = tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:")
+    foodplan_window_label = tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:", font=Message_Font)
     foodplan_window_label.pack(pady=5)
     available_foods_entry = tk.Entry(foodplan_window)
     available_foods_entry.pack(pady=5)
 
-    get_recom = tk.Button(foodplan_window, text="Получить план питания", command=display_meal_plan)
+    get_recom = tk.Button(foodplan_window, text="Получить план питания", command=display_meal_plan, font=Message_Font)
     get_recom.pack(pady=20)
 
     result_text = tk.Text(foodplan_window, width=50, height=10)
@@ -257,6 +235,7 @@ def open_counter_kcal_window():
     main_window.withdraw()
     product_list=[]
     counter_kcal_window = tk.Tk()
+
     counter_kcal_window.title("Счетчик КБЖУ")
     counter_kcal_window.geometry("700x500+400+200")
     try:
@@ -360,61 +339,53 @@ def calculate_and_display():
     # Лизина часть
 
 def open_add_data_window():
-    global main_window, add_data_window, is_add_data_window_open
-    is_add_data_window_open = True
-    # close_main_window()
+    global add_data_window, is_main_window_open, main_window
+    if is_main_window_open:
+        main_window.destroy()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
-    add_data_window.geometry("500x300+400+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        add_data_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    add_data_window.geometry("500x300+500+200")
+
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
-    Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
     welcome_label_7 = tk.Label(add_data_window, text="Добавить новые данные", font=Title_Font)
     welcome_label_7.pack(pady=20)
 
+    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
+    add_foodplan_button.pack(pady=5)
+
+    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
+    add_newfood_button.pack(pady=5) 
+
     add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window, font=Button_Font) 
     add_train_button.pack(pady=5)
 
-    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
-    add_foodplan_button.pack(pady=5)
-     #Ксюшина част
-
-    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
-    add_newfood_button.pack(pady=5) #Лизина часть
-
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add, font=Button_Font) 
     main_menu_button.pack(pady=5)
+
+def return_to_main_from_add():
+    add_data_window.destroy()
+    open_main_menu()
 
 def open_add_train_window():
     global main_window, add_data_window, add_train_window
-    add_data_window.destroy()
     add_train_window = tk.Tk()
     add_train_window.title("Добавление нового плана тренировок")
-    add_train_window.geometry("400x200+400+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        add_train_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    add_train_window.geometry("600x250+500+200")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label_8 = tk.Label(add_data_window, text="Добавьте новые данные о тренировке", font=Title_Font)
-    welcome_label_8.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+    welcome_label_8 = tk.Label(add_train_window, text="Добавьте новые данные о тренировке", font=Title_Font)
+    welcome_label_8.grid(row=0,column=1, padx=20, pady=5, sticky="w")
 
     new_train_plan_label = tk.Label(add_train_window, text="Добавьте данные о тренировке:", font=Message_Font)
-    new_train_plan_label.grid(row=2,column=1, padx=20, pady=5, sticky="w")
+    new_train_plan_label.grid(row=1,column=1, padx=20, pady=5, sticky="w")
     new_train_plan_entry = tk.Entry(add_train_window)
-    new_train_plan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
+    new_train_plan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="w")
 
     def save_data():
         global new_train_plan
@@ -425,18 +396,12 @@ def open_add_train_window():
         except ValueError:
             print("Ошибка: Введите текст.")
 
-    save_and_next_button = tk.Button(add_data_window, text="Сохранить и выйти", command=save_data, font=Button_Font)
+    save_and_next_button = tk.Button(add_train_window, text="Сохранить и выйти", command=save_data, font=Button_Font)
     save_and_next_button.grid(row=3, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-    ex_window_button = tk.Button(add_data_window, text="Назад", command=open_add_data_window, font=Button_Font) 
+    ex_window_button = tk.Button(add_train_window, text="Назад", command=return_to_add_data_window_from_aT, font=Button_Font) 
     ex_window_button.grid(row=4, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
-    main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
-
-
-
-#добавить план питания в бд готова
 def add_meal_plan(): 
     age_min = add_age_min_entry.get()
     age_max = add_age_max_entry.get()
@@ -456,12 +421,8 @@ def open_add_foodplan_window():
     add_data_window.withdraw()
     add_foodplan_window = tk.Tk()
     add_foodplan_window.title("Добавление нового плана питания")
-    add_foodplan_window.geometry("500x400+400+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        add_foodplan_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    add_foodplan_window.geometry("500x500+500+200")
+
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -470,52 +431,54 @@ def open_add_foodplan_window():
     welcome_label_9 = tk.Label(add_foodplan_window, text="Добавьте новый план питания", font=Title_Font)
     welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
 
-    add_min_age_label = tk.Label(add_foodplan_window, text='Введите возраст (от): ')
+    add_min_age_label = tk.Label(add_foodplan_window, text='Введите возраст (от): ', font=Message_Font)
     add_min_age_label.grid(row=3, column=1, pady=5, sticky="w")
     add_age_min_entry = tk.Entry(add_foodplan_window)
     add_age_min_entry.grid(row=3, column=2, pady=5, sticky="e")
 
-    add_max_age_label = tk.Label(add_foodplan_window, text='Введите возраст (до): ')
+    add_max_age_label = tk.Label(add_foodplan_window, text='Введите возраст (до): ', font=Message_Font)
     add_max_age_label.grid(row=4, column=1, pady=5, sticky="w")
     add_age_max_entry = tk.Entry(add_foodplan_window)
     add_age_max_entry.grid(row=4, column=2, pady=5, sticky="e")
 
-    add_min_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (от): ')
+    add_min_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (от): ', font=Message_Font)
     add_min_bmi_label.grid(row=5, column=1, pady=5, sticky="w")
     add_min_bmi_entry = tk.Entry(add_foodplan_window)
     add_min_bmi_entry.grid(row=5, column=2, pady=5, sticky="e")
 
-    add_max_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (до): ')
+    add_max_bmi_label = tk.Label(add_foodplan_window, text='Введите ИМТ (до): ', font=Message_Font)
     add_max_bmi_label.grid(row=6, column=1, pady=5, sticky="w")
     add_max_bmi_entry = tk.Entry(add_foodplan_window)
     add_max_bmi_entry.grid(row=6, column=2, pady=5, sticky="e")
 
-    add_description_label = tk.Label(add_foodplan_window, text='Введите описание: ')
+    add_description_label = tk.Label(add_foodplan_window, text='Введите описание: ', font=Message_Font)
     add_description_label.grid(row=7, column=1, pady=5, sticky="w")
     add_description_entry = tk.Entry(add_foodplan_window)
     add_description_entry.grid(row=7, column=2, pady=5, sticky="e")
 
-    add_time_label = tk.Label(add_foodplan_window, text='Введите время приёма: ')
+    add_time_label = tk.Label(add_foodplan_window, text='Введите время приёма: ', font=Message_Font)
     add_time_label.grid(row=8, column=1, pady=5, sticky="w")
     add_time_entry = tk.Entry(add_foodplan_window)
     add_time_entry.grid(row=8, column=2, pady=5, sticky="e")
 
-    add_products_label = tk.Label(add_foodplan_window, text='Введите продукты (через запятую): ')
+    add_products_label = tk.Label(add_foodplan_window, text='Введите продукты (через запятую): ', font=Message_Font)
     add_products_label.grid(row=9, column=1, pady=5, sticky="w")
     add_products_entry = tk.Entry(add_foodplan_window)
     add_products_entry.grid(row=9, column=2, pady=5, sticky="e")
 
-    add_foodplan_button = tk.Button(add_foodplan_window, text="Добавить план питания", command=add_meal_plan)
+    add_foodplan_button = tk.Button(add_foodplan_window, text="Добавить план питания", command=add_meal_plan, font=Button_Font)
     add_foodplan_button.grid(row=10, columnspan=3, pady=20)
 
-    to_add_data_window_button = tk.Button(add_foodplan_window, text="Назад", command=return_to_add_data_window)
+    to_add_data_window_button = tk.Button(add_foodplan_window, text="Назад", command=return_to_add_data_window, font=Button_Font)
     to_add_data_window_button.grid(row=11, columnspan=3, pady=(5, 20))
+
+def return_to_add_data_window_from_aT():
+    add_train_window.destroy()
+    add_data_window.deiconify()
 
 def return_to_add_data_window():
     add_foodplan_window.destroy()
     add_data_window.deiconify()
-
-    # Ксюшина часть
 
 def add_newfood():
     name = add_name_entry.get()
@@ -532,12 +495,7 @@ def open_add_newfood_window():
     is_add_newfood_window_open = True
     add_newfood_window = tk.Tk()
     add_newfood_window.title("Добавление нового продукта и его энергетической ценности")
-    add_newfood_window.geometry("1200x400+300+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        add_newfood_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+    add_newfood_window.geometry("1000x400+300+200")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -577,12 +535,9 @@ def open_add_newfood_window():
     to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1, font=Button_Font)
     to_add_data_window_button.grid(row=11, columnspan=3,padx=20, pady=(5, 20))
 
-    
-def back_to_add_data_window1():
-    global add_newfood_window, is_add_newfood_window_open
+def back_to_add_data_window1(): # NW
     add_newfood_window.destroy()
-    add_data_window.deiconify()
-    
+    open_add_data_window()
 
 if __name__ == "__main__":
     height, weight, age, gender = 0, 0, 0, ""
