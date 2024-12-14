@@ -1,19 +1,17 @@
 import sqlite3
 import unittest
+from db import insert_data_1, insert_data_2
+from unittest.mock import MagicMock, Mock
 
-def insert_data_2(connection, meal_plans):
-    cursor = connection.cursor()
-    
-    try:
-        cursor.executemany("""
-            INSERT INTO MealPlans (age_min, age_max, bmi_min, bmi_max, description, time, products_needed)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        """, meal_plans)
-        connection.commit()
-    except sqlite3.IntegrityError:
-        print("Duplicate entry detected.")
-    finally:
-        cursor.close()
+import pytest
+from project import open_hello_window()
+
+def test_open_hello_window_success(mock_tk, mock_photoimage):
+    mock_window = Mock() 
+    mock_tk.return_value = mock_window 
+    mock_photoimage.return_value = Mock() 
+    open_hello_window() 
+    mock_tk.assert_called_once()
 
 class TestInsertData(unittest.TestCase):
 
@@ -47,7 +45,7 @@ class TestInsertData(unittest.TestCase):
             (26, 35, 25.0, 29.9, 'Balanced Plan', 'Lunch', 'Chicken Salad')
         ]
         
-        insert_data_2(self.connection, meal_plans)  # Передаем соединение
+        insert_data_2(self.connection, meal_plans) 
         
         self.cursor.execute("SELECT COUNT(*) FROM MealPlans")
         count = self.cursor.fetchone()[0]
@@ -59,8 +57,8 @@ class TestInsertData(unittest.TestCase):
             (26, 35, 25.0, 29.9, 'Balanced Plan', 'Lunch', 'Chicken Salad')
         ]
         
-        insert_data_2(self.connection, meal_plans)  # Первая вставка
-        insert_data_2(self.connection, meal_plans)  # Повторная вставка
+        insert_data_2(self.connection, meal_plans)  
+        insert_data_2(self.connection, meal_plans)  
         
         self.cursor.execute("SELECT COUNT(*) FROM MealPlans")
         count = self.cursor.fetchone()[0]
@@ -70,3 +68,50 @@ if __name__ == '__main__':
     unittest.main()
 
 
+def test_successful_insertion(mocker):
+    mock_cursor = MagicMock()
+    mock_connection = MagicMock()
+    mock_connection.cursor.return_value = mock_cursor
+    mocker.patch('sqlite3.connect', return_value=mock_connection)
+
+    test_products = [
+        ("Apple", 52.0, 0.3, 0.2, 14.0, 100.0),
+        ("Banana", 96.0, 1.2, 0.3, 23.0, 120.0),
+    ]
+    insert_data_1(test_products)
+
+    mock_cursor.executemany.assert_called_once_with(
+        """
+                        INSERT OR IGNORE INTO Products 
+                        (name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms, serving_size_gramms) 
+                        VALUES (?, ?, ?, ?, ?, ?)""",
+         test_products
+    )
+
+    mock_connection.commit.assert_called_once()
+
+
+def test_empty_product_list(mocker):
+     mock_cursor = MagicMock()
+     mock_connection = MagicMock()
+     mock_connection.cursor.return_value = mock_cursor
+     mocker.patch('sqlite3.connect', return_value=mock_connection)
+
+     insert_data_1([])
+
+     mock_cursor.executemany.assert_not_called()
+     mock_connection.commit.assert_called_once()
+
+def test_insertion_failure(mocker):
+    mock_cursor = MagicMock()
+    mock_connection = MagicMock()
+    mock_connection.cursor.return_value = mock_cursor
+    mocker.patch('sqlite3.connect', return_value=mock_connection)
+
+    mock_cursor.executemany.side_effect = sqlite3.Error("Simulated error")
+
+    test_products = [("Apple", 52.0, 0.3, 0.2, 14.0, 100.0)]
+    with pytest.raises(sqlite3.Error):
+      insert_data_1(test_products)
+    mock_connection.commit.assert_not_called()
+    mock_cursor.executemany.assert_called_once()
