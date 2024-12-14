@@ -7,8 +7,8 @@ cursor = cnct.cursor()
 # tables = cursor.fetchall()
 # print("Tables:", tables)
 
-# cursor.execute("SELECT * FROM TrainPlans;") #после FROM - имя любой таблицы
-# rows = cursor.fetchall()
+cursor.execute("SELECT * FROM MealPlans;") #после FROM - имя любой таблицы
+rows = cursor.fetchall()
 
 # for row in rows:
 #     print(row)

@@ -41,7 +41,7 @@ def create_database():
                 age_max INTEGER,
                 bmi_min INTEGER,
                 bmi_max INTEGER,
-                train_number TEXT 
+                train_number TEXT, 
                 description_train TEXT              
             )
         """)

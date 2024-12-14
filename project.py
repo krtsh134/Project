@@ -2,6 +2,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
+from count_nutritional_value import *
 #import db
 
 def open_hello_window():
@@ -264,10 +265,11 @@ def open_add_data_window():
     add_train_button.pack(pady=5)
 
     add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
-    add_foodplan_button.pack(pady=5) #Ксюшина часть
+    add_foodplan_button.pack(pady=5)
+     #Ксюшина част
 
-    # add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
-    # add_newfood_button.pack(pady=5) Лизина часть
+    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
+    add_newfood_button.pack(pady=5) #Лизина часть
 
     main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
     main_menu_button.pack(pady=5)
@@ -413,8 +415,77 @@ def return_to_add_data_window():
     add_data_window.deiconify()
 
     # Ксюшина часть
-#def open_add_newfood_window():
-    # Лизина часть
+def add_newfood():
+    name = add_name_entry.get()
+    kilocalories= add_kilocalories_entry.get()
+    protein_gramms= add_protein_gramms_entry.get()
+    fat_gramms = add_fat_gramms_entry.get()
+    carbohydrates_gramms=add_carbohydrates_gramms_entry.get()
+    serving_size_gramms=int(100)
+    add_newfoods(name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms, serving_size_gramms)
+
+def open_add_newfood_window():
+    global main_window, add_data_window, add_newfood_window, is_add_newfood_window_open, add_name_entry, add_kilocalories_entry, add_protein_gramms_entry, add_fat_gramms_entry, add_carbohydrates_gramms_entry
+    #add_data_window.destroy()
+    is_add_newfood_window_open = True
+    add_newfood_window = tk.Tk()
+    add_newfood_window.title("Добавление нового продукта и его энергетической ценности")
+    add_newfood_window.geometry("1200x400+300+200")
+    try:
+        logo = tk.PhotoImage(file='logo.png')
+        add_newfood_window.iconphoto(False, logo)
+    except tk.TclError:
+        print("Warning: logo.png not found.")
+
+    Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
+    Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
+    Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
+
+    welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность", font=Title_Font)
+    welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+
+    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта:', font=Message_Font)
+    add_name_label.grid(row=3, column=1, padx=20, pady=5, sticky="w")
+    add_name_entry = tk.Entry(add_newfood_window)
+    add_name_entry.grid(row=3, column=2, padx=20, pady=5, sticky="e")
+
+    add_kilocalories_label = tk.Label(add_newfood_window, text='Введите количество килокалорий, содержащихся в 100 граммах введённого Вами продукта:', font=Message_Font)
+    add_kilocalories_label.grid(row=4, column=1,padx=20, pady=5, sticky="w")
+    add_kilocalories_entry = tk.Entry(add_newfood_window)
+    add_kilocalories_entry.grid(row=4, column=2,padx=20, pady=5, sticky="e")
+
+    add_protein_gramms_label = tk.Label(add_newfood_window, text='Введите количество белков (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
+    add_protein_gramms_label.grid(row=5, column=1, padx=20, pady=5, sticky="w")
+    add_protein_gramms_entry = tk.Entry(add_newfood_window)
+    add_protein_gramms_entry.grid(row=5, column=2, padx=20, pady=5, sticky="e")
+
+    add_fat_gramms_label = tk.Label(add_newfood_window, text='Введите количество жиров (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
+    add_fat_gramms_label.grid(row=6, column=1,padx=20, pady=5, sticky="w")
+    add_fat_gramms_entry = tk.Entry(add_newfood_window)
+    add_fat_gramms_entry.grid(row=6, column=2, padx=20, pady=5, sticky="e")
+
+    add_carbohydrates_gramms_label = tk.Label(add_newfood_window, text='Введите количество углеводов (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
+    add_carbohydrates_gramms_label.grid(row=7, column=1, padx=20, pady=5, sticky="w")
+    add_carbohydrates_gramms_entry = tk.Entry(add_newfood_window)
+    add_carbohydrates_gramms_entry.grid(row=7, column=2, padx=20, pady=5, sticky="e")
+
+    add_newfood_button = tk.Button(add_newfood_window, text="Сохранить и продолжить", command=add_newfood, font=Button_Font)
+    add_newfood_button.grid(row=10, columnspan=3,padx=20, pady=20)
+
+    to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1, font=Button_Font)
+    to_add_data_window_button.grid(row=11, columnspan=3,padx=20, pady=(5, 20))
+
+    
+def back_to_add_data_window1():
+    global add_newfood_window, is_add_newfood_window_open
+    
+    if is_add_newfood_window_open: 
+        add_newfood_window.destroy()
+        add_data_window.deiconify()
+    else:
+        print("Окно добавления энергетической ценности продукта уже закрыто.")
+
+
 
 if __name__ == "__main__":
     height, weight, age, gender = 0, 0, 0, ""
