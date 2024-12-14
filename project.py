@@ -3,6 +3,7 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
 from count_nutritional_value import *
+from count_nutritional_value import add_newfoods
 #import db
 
 def open_hello_window():
@@ -401,7 +402,7 @@ def add_newfood():
 
 def open_add_newfood_window():
     global main_window, add_data_window, add_newfood_window, is_add_newfood_window_open, add_name_entry, add_kilocalories_entry, add_protein_gramms_entry, add_fat_gramms_entry, add_carbohydrates_gramms_entry
-    #add_data_window.destroy()
+    add_data_window.destroy()
     is_add_newfood_window_open = True
     add_newfood_window = tk.Tk()
     add_newfood_window.title("Добавление нового продукта и его энергетической ценности")
@@ -419,7 +420,7 @@ def open_add_newfood_window():
     welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность", font=Title_Font)
     welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
 
-    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта:', font=Message_Font)
+    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта с большой буквы:', font=Message_Font)
     add_name_label.grid(row=3, column=1, padx=20, pady=5, sticky="w")
     add_name_entry = tk.Entry(add_newfood_window)
     add_name_entry.grid(row=3, column=2, padx=20, pady=5, sticky="e")
@@ -453,12 +454,11 @@ def open_add_newfood_window():
     
 def back_to_add_data_window1():
     global add_newfood_window, is_add_newfood_window_open
+    add_newfood_window.destroy()
+    add_data_window.deiconify()
     
-    if is_add_newfood_window_open: 
-        add_newfood_window.destroy()
-        add_data_window.deiconify()
-    else:
-        print("Окно добавления энергетической ценности продукта уже закрыто.")
+
+
 
 
 
