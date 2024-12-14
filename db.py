@@ -1,3 +1,4 @@
+from multiprocessing import connection
 import sqlite3
 
 def create_database():
@@ -99,16 +100,21 @@ products = [
     
 ]
 
-def insert_data_1(products):
+def insert_data_1(connection, products):
     """Inserts data into the database."""
-    with sqlite3.connect('health_control.db') as cnct:
-        cursor = cnct.cursor()
+    cursor = connection.cursor()
+    try:
         cursor.executemany("""
                         INSERT OR IGNORE INTO Products 
                         (name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms, serving_size_gramms) 
                         VALUES (?, ?, ?, ?, ?, ?)""", 
                         products)
-    cnct.commit()
+        connection.commit()
+    except sqlite3.IntegrityError:
+        print("Duplicate entry detected.")
+    finally:
+        cursor.close() 
+
 
 meal_plans = [
 (16, 20, 10, 20, "Low-Caloried Plan", "breakfast", "['Манная крупа', 'Молоко']"),
@@ -352,15 +358,21 @@ meal_plans = [
 (51, 55, 25.1, 35, "High-Caloried Plan", "dinner", "['Ветчина из индейки', 'Хлеб', 'Авокадо']")
 ]
 
-def insert_data_2(meal_plans):
-    with sqlite3.connect('health_control.db') as cnct:
-        cursor = cnct.cursor()
+def insert_data_2(connection, meal_plans):
+    cursor = connection.cursor()
+    try:
         cursor.executemany("""
-            INSERT OR IGNORE INTO MealPlans 
-            (age_min, age_max, bmi_min, bmi_max, description, time, products_needed) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)""", 
-            meal_plans)
-        cnct.commit()
+            INSERT INTO MealPlans (age_min, age_max, bmi_min, bmi_max, description, time, products_needed)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, meal_plans)
+        connection.commit()
+    except sqlite3.IntegrityError:
+        print("Duplicate entry detected.")
+    finally:
+        cursor.close()
+
+connection = sqlite3.connect('health_control.db')
+
 
 train_plans = [
     (16, 20, 10.0, 20.0, "Train_1", "Female", "разминка, пробежка 20 минут, приседания 3х15, отжимания 3х15,подтягивания (или тяги к поясу) 3х10, заминка."),
@@ -479,6 +491,6 @@ def insert_data_3(train_plans):
         cnct.commit()
 
 create_database()
-insert_data_1(products)
-insert_data_2(meal_plans)
+insert_data_1(connection, products)
+insert_data_2(connection, meal_plans)
 insert_data_3(train_plans)
