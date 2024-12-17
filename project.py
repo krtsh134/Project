@@ -219,6 +219,7 @@ def open_main_menu():
 
     if is_parametrs_window_open:
         parametrs_window.destroy()
+        is_parametrs_window_open = False 
 
     is_main_window_open = True
     
@@ -514,13 +515,13 @@ def open_counter_kcal_window():
        Функция не возвращает значения.
    :rtype: None'''
 
-    global main_window, counter_kcal_window, name_entry, size_entry, product_listbox, product_list, result_label
+    global main_window, counter_kcal_window, name_entry, size_entry, product_listbox, product_list, result_label, back_button
     main_window.withdraw()
     product_list=[]
     counter_kcal_window = tk.Tk()
 
     counter_kcal_window.title("Счетчик КБЖУ")
-    counter_kcal_window.geometry("750x370+400+200")
+    counter_kcal_window.geometry("900x370+400+200")
 
     try:
         logo = tk.PhotoImage(file='logo.png')
@@ -534,23 +535,39 @@ def open_counter_kcal_window():
 
     welcome_label = tk.Label(counter_kcal_window, text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font)
     welcome_label.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
+
     name_label = tk.Label(counter_kcal_window, text="Введите название продукта:", font=Message_Font) 
     name_label.grid(row=1, column=0, padx=20, pady=5, sticky="w")
     name_entry = tk.Entry(counter_kcal_window)  
     name_entry.grid(row=1, column=1, padx=20, pady=5, sticky="e")
+
     size_label = tk.Label(counter_kcal_window, text="Введите массу продукта (в граммах):", font=Message_Font)  
     size_label.grid(row=2, column=0, padx=20, pady=5, sticky="w")
     size_entry = tk.Entry(counter_kcal_window)  
     size_entry.grid(row=2, column=1, padx=20, pady=5, sticky="e")
+    
     add_button = tk.Button(counter_kcal_window, text="Добавить ещё продукт", command=add_product_for_counting, font=Button_Font) 
     add_button.grid(row=3, column=0, padx=20, pady=10, sticky="e")
+
     calculate_button = tk.Button(counter_kcal_window, text="Посчитать мои КБЖУ за день", command=calculate_and_display, font=Button_Font)  
     calculate_button.grid(row=3, column=1, padx=20, pady=10, sticky="w")
+
     result_label = tk.Label(counter_kcal_window, text="Ваши КБЖУ за день:", font=Message_Font, justify="left")  
     result_label.grid(row=4, column=0, columnspan=3, padx=20, pady=10, sticky="w")
+
     product_listbox = tk.Listbox(counter_kcal_window, width=50)  
     product_listbox.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
     product_listbox.config(height=5)
+
+    back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3, font=Button_Font)
+    back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e" )
+
+
+
+def back_to_add_data_window3():
+    counter_kcal_window.destroy()
+    main_window.deiconify()
+
 
 def open_add_data_window():
     global main_window, add_data_window, is_add_data_window_open
@@ -781,8 +798,15 @@ def open_add_train_window():
     add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
     add_newfood_button.pack(pady=5) 
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add, font=Button_Font) 
     main_menu_button.pack(pady=5)
+
+
+# def back_to_main_menu():
+#     add_data_window.destroy()
+#     main_window.deiconify()
+
+
 
 def open_add_train_window():
     global main_window, add_data_window, add_train_window
@@ -1097,7 +1121,7 @@ def open_add_newfood_window():
        Функция не возвращает значения.
    :rtype: None'''
     global main_window, add_data_window, add_newfood_window, is_add_newfood_window_open, add_name_entry, add_kilocalories_entry, add_protein_gramms_entry, add_fat_gramms_entry, add_carbohydrates_gramms_entry
-    add_data_window.destroy()
+    add_data_window.withdraw()
     is_add_newfood_window_open = True
     add_newfood_window = tk.Tk()
     add_newfood_window.title("Добавление нового продукта и его энергетической ценности")
