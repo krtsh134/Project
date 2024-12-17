@@ -3,7 +3,8 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
 from Train_plans import *
-from count_nutritional_value import *
+from count_nutritional_value import add_newfoods
+
 
 def open_hello_window():
     '''
@@ -26,7 +27,7 @@ def open_hello_window():
 
     hello_window = tk.Tk()
     hello_window.title('Health Controller')
-    hello_window.geometry("700x150+400+200") 
+    hello_window.geometry("700x150+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         hello_window.iconphoto(False, logo)
@@ -36,11 +37,13 @@ def open_hello_window():
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
 
-    welcome_label = tk.Label(hello_window, text="Добро пожаловать в приложение по отслеживанию здоровья!", font=Title_Font)
+    welcome_label = tk.Label(hello_window, text="Добро пожаловать в приложение по отслеживанию здоровья!",
+                             font=Title_Font)
     welcome_label.pack(pady=20)
 
     next_button = tk.Button(hello_window, text="Далее", command=open_parametrs_window, width=10, font=Button_Font)
     next_button.pack(pady=10)
+
 
 def open_parametrs_window():
     global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, is_parametrs_window_open, age, bmi
@@ -75,48 +78,51 @@ def open_parametrs_window():
    :return: None
        Функция не возвращает значения.
    :rtype: None'''
-    hello_window.destroy()
-    
+    try:
+        hello_window.destroy()
+    except (NameError, tk.TclError):
+        pass
+
     is_parametrs_window_open = True
 
     parametrs_window = tk.Tk()
     parametrs_window.title("Ваши параметры")
     parametrs_window.geometry("300x300+600+200")
     try:
-        logo = tk.PhotoImage(file='logo.png')
+        logo = tk.PhotoImage(master=parametrs_window, file='logo.png')
         parametrs_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
 
-    Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
-    Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
-    Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
+    Title_Font = tkFont.Font(root=parametrs_window, family="Comic Sans MS", size=16)
+    Button_Font = tkFont.Font(root=parametrs_window, family="Comic Sans MS", size=13)
+    Message_Font = tkFont.Font(root=parametrs_window, family="Comic Sans MS", size=12)
 
     welcome_label_2 = tk.Label(parametrs_window, text="Введите ваши данные", font=Title_Font)
     welcome_label_2.grid(row=0, column=1, columnspan=2, pady=10)
 
     height_label = tk.Label(parametrs_window, text="Рост (см):", font=Message_Font)
-    height_label.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+    height_label.grid(row=1, column=1, padx=20, pady=5, sticky="w")
     height_entry = tk.Entry(parametrs_window)
     height_entry.grid(row=1, column=2, padx=20, pady=5, sticky="e")
 
     weight_label = tk.Label(parametrs_window, text="Вес (кг):", font=Message_Font)
-    weight_label.grid(row=2,column=1, padx=20, pady=5, sticky="w")
+    weight_label.grid(row=2, column=1, padx=20, pady=5, sticky="w")
     weight_entry = tk.Entry(parametrs_window)
     weight_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
 
     age_label = tk.Label(parametrs_window, text="Возраст:", font=Message_Font)
-    age_label.grid(row=3,column=1, padx=20, pady=5, sticky="w")
+    age_label.grid(row=3, column=1, padx=20, pady=5, sticky="w")
     age_entry = tk.Entry(parametrs_window)
     age_entry.grid(row=3, column=2, padx=20, pady=5, sticky="e")
 
     gendr_label = tk.Label(parametrs_window, text="Пол:", font=Message_Font)
-    gendr_label.grid(row=4,column=1, padx=20, pady=5, sticky="w")
+    gendr_label.grid(row=4, column=1, padx=20, pady=5, sticky="w")
     gendr_var = tk.StringVar(parametrs_window)
-    gendr_var.set("Мужской")  
+    gendr_var.set("Мужской")
     gendr_options = ["Мужской", "Женский"]
     gendr_menu = tk.OptionMenu(parametrs_window, gendr_var, *gendr_options)
-    gendr_menu.grid(row=4,column=2, padx=20, pady=5, sticky="w")
+    gendr_menu.grid(row=4, column=2, padx=20, pady=5, sticky="w")
 
     def save_data():
         '''
@@ -159,16 +165,18 @@ def open_parametrs_window():
             weight = float(weight_entry.get())
             age = float(age_entry.get())
             gendr = gendr_var.get()
-            bmi = round(weight/((height/100)**2), -1)
+            bmi = round(weight / ((height / 100) ** 2), -1)
             print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gendr}, ИМТ: {bmi}")
             open_main_menu()
         except ValueError:
             print("Ошибка: Введите числовые значения.")
 
-    save_and_next_button = tk.Button(parametrs_window, text="Сохранить и продолжить", command=save_data, font=Button_Font)
+    save_and_next_button = tk.Button(parametrs_window, text="Сохранить и продолжить", command=save_data,
+                                     font=Button_Font)
     save_and_next_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
     parametrs_window.mainloop()
+
 
 def from_par_to_main():
     '''
@@ -188,6 +196,7 @@ def from_par_to_main():
    :rtype: None'''
     parametrs_window.destroy()
     open_main_menu()
+
 
 def open_main_menu():
     '''
@@ -219,14 +228,14 @@ def open_main_menu():
 
     if is_parametrs_window_open:
         parametrs_window.destroy()
-        is_parametrs_window_open = False 
+        is_parametrs_window_open = False
 
     is_main_window_open = True
-    
+
     main_window = tk.Tk()
     main_window.title("Главное меню")
     main_window.geometry("400x330+550+100")
-    try: 
+    try:
         logo = tk.PhotoImage(file='logo.png')
         main_window.iconphoto(False, logo)
     except tk.TclError:
@@ -240,15 +249,18 @@ def open_main_menu():
 
     train_button = tk.Button(main_window, text="План тренировок", command=open_train_window, font=Button_Font)
     train_button.grid(row=1, column=1, columnspan=2, padx=20, pady=10, sticky="w")
-    
+
     foodplan_button = tk.Button(main_window, text="План питания", command=open_foodplan_window, font=Button_Font)
     foodplan_button.grid(row=2, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
-    counter_kcal_button = tk.Button(main_window, text="Счетчик калорий", command=open_counter_kcal_window, font=Button_Font)
+    counter_kcal_button = tk.Button(main_window, text="Счетчик калорий", command=open_counter_kcal_window,
+                                    font=Button_Font)
     counter_kcal_button.grid(row=3, column=1, columnspan=2, padx=20, pady=10, sticky="w")
 
-    add_data_button = tk.Button(main_window, text="Ввести новые данные в базу данных", command=open_add_data_window, font=Button_Font)
+    add_data_button = tk.Button(main_window, text="Ввести новые данные в базу данных", command=open_add_data_window,
+                                font=Button_Font)
     add_data_button.grid(row=4, column=1, columnspan=2, padx=20, pady=10, sticky="w")
+
 
 def display_train_plan():
     '''
@@ -285,9 +297,8 @@ def display_train_plan():
         result = "\n".join([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans])
         messagebox.showinfo("Тренировочные планы", result)
 
-        result_text_1.delete(1.0, tk.END) 
+        result_text_1.delete(1.0, tk.END)
         result_text_1.insert(tk.END, result)
-        
 
 
 def open_train_window():
@@ -319,13 +330,13 @@ def open_train_window():
     train_window = tk.Tk()
     train_window.title("План тренировки")
     train_window.geometry("600x750+450+100")
-    
+
     try:
         logo = tk.PhotoImage(file='logo.png')
         train_window.iconphoto(False, logo)
     except tk.TclError:
         print("Warning: logo.png not found.")
-    
+
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
@@ -333,7 +344,7 @@ def open_train_window():
     welcome_label_4 = tk.Label(train_window, text="Ваша тренировка на сегодня", font=Title_Font)
     welcome_label_4.pack(pady=20)
 
-    get_plan = tk.Button(train_window, text="Получить тренировку", command= display_train_plan, font=Button_Font)
+    get_plan = tk.Button(train_window, text="Получить тренировку", command=display_train_plan, font=Button_Font)
     get_plan.pack(pady=20)
 
     result_text_1 = tk.Text(train_window, width=50, height=10, font=Message_Font)
@@ -342,8 +353,10 @@ def open_train_window():
     # main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu, font=Button_Font) 
     # main_menu_button.pack(pady=5)
 
-    main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu, font=Button_Font) 
+    main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu,
+                                 font=Button_Font)
     main_menu_button.pack(pady=5)
+
 
 def return_to_main_menu():
     '''
@@ -365,6 +378,7 @@ def return_to_main_menu():
    :rtype: None'''
     train_window.destroy()
     main_window.deiconify()
+
 
 def display_meal_plan():
     '''
@@ -395,7 +409,8 @@ def display_meal_plan():
         available_foods_list = [food.strip().lower() for food in available_foods_input.split(',')]
         meal_plan = get_meal_plan(age, bmi, available_foods_list)
 
-        meal_plan_str = "\n".join(f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
+        meal_plan_str = "\n".join(
+            f"{meal}: {desc} (Продукты: {prod})" for meal, (desc, prod) in meal_plan.items() if desc is not None)
 
         result_text.delete(1.0, tk.END)
 
@@ -406,6 +421,7 @@ def display_meal_plan():
     except ValueError:
         result_text.delete(1.0, tk.END)
         result_text.insert(tk.END, "Ошибка ввода: Пожалуйста, введите корректные значения для возраста и ИМТ.")
+
 
 def open_foodplan_window():
     '''
@@ -448,7 +464,7 @@ def open_foodplan_window():
 
     welcome_label_5 = tk.Label(foodplan_window, text="Ваш план питания на сегодня", font=Title_Font)
     welcome_label_5.pack(pady=20)
-    
+
     foodplan_window_label = tk.Label(foodplan_window, text="Введите Ваши продукты через запятую:")
     foodplan_window_label.pack(pady=5)
     available_foods_entry = tk.Entry(foodplan_window)
@@ -462,6 +478,7 @@ def open_foodplan_window():
 
     main_menu_button = tk.Button(foodplan_window, text="Главное меню", command=return_to_main_window, font=Button_Font)
     main_menu_button.pack(pady=5)
+
 
 def return_to_main_window():
     '''
@@ -483,6 +500,7 @@ def return_to_main_window():
    :rtype: None'''
     foodplan_window.destroy()
     main_window.deiconify()
+
 
 def open_counter_kcal_window():
     '''
@@ -517,11 +535,11 @@ def open_counter_kcal_window():
 
     global main_window, counter_kcal_window, name_entry, size_entry, product_listbox, product_list, result_label, back_button
     main_window.withdraw()
-    product_list=[]
+    product_list = []
     counter_kcal_window = tk.Tk()
 
     counter_kcal_window.title("Счетчик КБЖУ")
-    counter_kcal_window.geometry("900x370+400+200")
+    counter_kcal_window.geometry("900x500+400+200")
 
     try:
         logo = tk.PhotoImage(file='logo.png')
@@ -533,35 +551,36 @@ def open_counter_kcal_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label = tk.Label(counter_kcal_window, text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font)
+    welcome_label = tk.Label(counter_kcal_window,
+                             text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font)
     welcome_label.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
 
-    name_label = tk.Label(counter_kcal_window, text="Введите название продукта:", font=Message_Font) 
+    name_label = tk.Label(counter_kcal_window, text="Введите название продукта:", font=Message_Font)
     name_label.grid(row=1, column=0, padx=20, pady=5, sticky="w")
-    name_entry = tk.Entry(counter_kcal_window)  
-    name_entry.grid(row=1, column=1, padx=20, pady=5, sticky="e")
+    name_entry = tk.Entry(counter_kcal_window, width=20)
+    name_entry.grid(row=1, column=1, padx=70, pady=5, sticky="e")
 
-    size_label = tk.Label(counter_kcal_window, text="Введите массу продукта (в граммах):", font=Message_Font)  
+    size_label = tk.Label(counter_kcal_window, text="Введите массу продукта (в граммах):", font=Message_Font)
     size_label.grid(row=2, column=0, padx=20, pady=5, sticky="w")
-    size_entry = tk.Entry(counter_kcal_window)  
-    size_entry.grid(row=2, column=1, padx=20, pady=5, sticky="e")
-    
-    add_button = tk.Button(counter_kcal_window, text="Добавить ещё продукт", command=add_product_for_counting, font=Button_Font) 
+    size_entry = tk.Entry(counter_kcal_window, width=20)
+    size_entry.grid(row=2, column=1, padx=70, pady=5, sticky="e")
+
+    add_button = tk.Button(counter_kcal_window, text="Добавить ещё продукт", command=add_product_for_counting, font=Button_Font)
     add_button.grid(row=3, column=0, padx=20, pady=10, sticky="e")
 
-    calculate_button = tk.Button(counter_kcal_window, text="Посчитать мои КБЖУ за день", command=calculate_and_display, font=Button_Font)  
+    calculate_button = tk.Button(counter_kcal_window, text="Посчитать мои КБЖУ за день", command=calculate_and_display, font=Button_Font)
     calculate_button.grid(row=3, column=1, padx=20, pady=10, sticky="w")
 
-    result_label = tk.Label(counter_kcal_window, text="Ваши КБЖУ за день:", font=Message_Font, justify="left")  
+    result_label = tk.Label(counter_kcal_window, text="Ваши КБЖУ за день:", font=Message_Font)
     result_label.grid(row=4, column=0, columnspan=3, padx=20, pady=10, sticky="w")
 
-    product_listbox = tk.Listbox(counter_kcal_window, width=50)  
+    product_listbox = tk.Listbox(counter_kcal_window, width=50)
     product_listbox.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
     product_listbox.config(height=5)
 
-    back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3, font=Button_Font)
-    back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e" )
-
+    back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3,
+                            font=Button_Font)
+    back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e")
 
 
 def back_to_add_data_window3():
@@ -581,8 +600,8 @@ def open_add_data_window():
     except tk.TclError:
         print("Warning: logo.png not found.")
 
-    
-def add_product_for_counting(): 
+
+def add_product_for_counting():
     '''
     """
     Добавляет продукт с его массой в список для подсчета калорий.
@@ -618,73 +637,92 @@ def add_product_for_counting():
     product_list.append((name, weight))
     product_listbox.insert(tk.END, f"{name}: {weight}g")
     name_entry.delete(0, tk.END)
-    size_entry.delete(0, tk.END) 
+    size_entry.delete(0, tk.END)
 
-def calculate_and_display():
-    '''
+
+def calculate_nutritional_value(product_list, product_data):
     """
-    Вычисляет и отображает суммарную пищевую ценность продуктов из списка.
+    Вычисляет суммарные пищевые значения продуктов.
 
-   Эта функция извлекает данные о продуктах из базы данных, вычисляет суммарное
-   количество килокалорий, белков, жиров и углеводов на основе списка продуктов
-   и их размеров, и отображает результат в виджете `result_label`. 
-    Также очищает список продуктов `product_list` и список в виджете `product_listbox` после вычисления.
+    :param product_list: Список кортежей с именем продукта и размером [(str, int)].
+    :type product_list: list
+    :param product_data: Словарь с данными о продуктах {имя_продукта: (ккал, белки, жиры, углеводы)}.
+    :type product_data: dict
+    :return: Словарь с суммарными значениями {ккал, белки, жиры, углеводы}.
+    :rtype: dict
+    """
+    res_kcal, res_protein, res_fats, res_carbohydrates = 0, 0, 0, 0
 
-   :global result_label: Виджет `tk.Label` для отображения результатов вычислений.
-   :type result_label: tk.Label
-   :global product_list: Список кортежей, содержащих имя продукта (str) и его размер (int).
-   :type product_list: list
-   :global product_listbox: Виджет `tk.Listbox`, отображающий список продуктов.
-   :type product_listbox: tk.Listbox
+    for name, size in product_list:
+        name_lower = name.lower()
+        if name_lower in product_data:
+            kcal, protein, fats, carbohydrates = product_data[name_lower]
+            res_kcal += kcal * size / 100
+            res_protein += protein * size / 100
+            res_fats += fats * size / 100
+            res_carbohydrates += carbohydrates * size / 100
+        else:
+            raise KeyError(f"Product '{name}' not found in the database.")
 
-   :raises sqlite3.Error: Если возникает ошибка при работе с базой данных, отображается окно сообщения с ошибкой.
-   :raises Exception: Если возникает ошибка, не связанная с базой данных (например, KeyError), отображается окно сообщения с ошибкой.
+    return {
+        "kilocalories": round(res_kcal, 2),
+        "proteins": round(res_protein, 2),
+        "fats": round(res_fats, 2),
+        "carbohydrates": round(res_carbohydrates, 2)
+    }
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None'''
-    global result_label, product_list
+
+def fetch_products_from_db(database="health_control.db"):
+    """
+    Извлекает информацию о продуктах из базы данных.
+
+    :param database: Путь к файлу базы данных.
+    :type database: str
+    :return: Словарь с данными о продуктах {имя_продукта: (ккал, белки, жиры, углеводы)}.
+    :rtype: dict
+    """
     try:
-        connection_db = sqlite3.connect("health_control.db")
-        cursor_object = connection_db.cursor()
-        cursor_object.execute(
+        with sqlite3.connect(database) as conn:
+            cursor = conn.cursor()
+            cursor.execute(
                 "SELECT name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms FROM Products"
             )
-        table_Products_contents = {row[0].lower(): row[1:] for row in cursor_object.fetchall()}
-        res_kcal = 0
-        res_protein = 0
-        res_fats = 0
-        res_carbohydrates = 0
-        for name, size in product_list:
-                if name.lower() in table_Products_contents:
-                    kcal, protein, fats, carbohydrates = table_Products_contents[name.lower()]
-                    count_kcal = kcal * size / 100
-                    count_protein = protein * size / 100
-                    count_fats = fats * size / 100
-                    count_carbohydrates = carbohydrates * size / 100
-                    res_kcal += count_kcal
-                    res_protein += count_protein
-                    res_fats += count_fats
-                    res_carbohydrates += count_carbohydrates
-                else:
-                    messagebox.showerror("Product Error", f"Product '{name}' not found.")
-                    return  
-        result_text = (
-                f"Килокалории: {round(res_kcal, 2)}\n"
-                f"Белки: {round(res_protein, 2)}\n"
-                f"Жиры: {round(res_fats, 2)}\n"
-                f"Углеводы: {round(res_carbohydrates, 2)}"
-            )
-        result_label.config(text=result_text)
-        product_list.clear()  
-        product_listbox.delete(0,tk.END) 
+            return {row[0].lower(): row[1:] for row in cursor.fetchall()}
     except sqlite3.Error as e:
-           messagebox.showerror("Database Error", f"Database error: {e}")
+        raise Exception(f"Database error: {e}")
+
+
+def calculate_and_display():
+    """
+    Взаимодействует с интерфейсом: получает данные, вычисляет и отображает результаты.
+    """
+    global result_label, product_list, product_listbox
+
+    try:
+       
+        product_data = fetch_products_from_db()
+
+       
+        result = calculate_nutritional_value(product_list, product_data)
+
+        
+        result_text = (
+            f"Килокалории: {result['kilocalories']}\n"
+            f"Белки: {result['proteins']}\n"
+            f"Жиры: {result['fats']}\n"
+            f"Углеводы: {result['carbohydrates']}"
+        )
+
+       
+        result_label.config(text=result_text)
+        product_list.clear()
+        product_listbox.delete(0, tk.END)
+
+    except KeyError as e:
+        messagebox.showerror("Product Error", str(e))
     except Exception as e:
-           messagebox.showerror("Error", f"An error occurred: {e}")
-    finally:
-           if connection_db:
-                connection_db.close()    
+        messagebox.showerror("Error", str(e))
+
 
 def open_add_data_window():
     '''
@@ -717,24 +755,28 @@ def open_add_data_window():
     add_data_window.title("Добавление данных")
     add_data_window.geometry("500x300+500+200")
 
-
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
 
     welcome_label_7 = tk.Label(add_data_window, text="Добавить новые данные", font=Title_Font)
     welcome_label_7.pack(pady=20)
 
-    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
+    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window,
+                                    font=Button_Font)
     add_foodplan_button.pack(pady=5)
 
-    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
-    add_newfood_button.pack(pady=5) 
+    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта",
+                                   command=open_add_newfood_window, font=Button_Font)
+    add_newfood_button.pack(pady=5)
 
-    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window, font=Button_Font) 
+    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window,
+                                 font=Button_Font)
     add_train_button.pack(pady=5)
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add, font=Button_Font) 
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add,
+                                 font=Button_Font)
     main_menu_button.pack(pady=5)
+
 
 def return_to_main_from_add():
     '''
@@ -754,6 +796,7 @@ def return_to_main_from_add():
    :rtype: None'''
     add_data_window.destroy()
     open_main_menu()
+
 
 def open_add_train_window():
     '''
@@ -789,22 +832,21 @@ def open_add_train_window():
     welcome_label_7 = tk.Label(add_data_window, text="Добавить новые данные", font=Title_Font)
     welcome_label_7.pack(pady=20)
 
-    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window, font=Button_Font) 
+    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window,
+                                 font=Button_Font)
     add_train_button.pack(pady=5)
 
-    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font) 
+    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window,
+                                    font=Button_Font)
     add_foodplan_button.pack(pady=5)
 
-    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font) 
-    add_newfood_button.pack(pady=5) 
+    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта",
+                                   command=open_add_newfood_window, font=Button_Font)
+    add_newfood_button.pack(pady=5)
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add, font=Button_Font) 
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add,
+                                 font=Button_Font)
     main_menu_button.pack(pady=5)
-
-
-# def back_to_main_menu():
-#     add_data_window.destroy()
-#     main_window.deiconify()
 
 
 
@@ -825,10 +867,10 @@ def open_add_train_window():
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
     welcome_label_8 = tk.Label(add_data_window, text="Добавьте новые данные о тренировке", font=Title_Font)
-    welcome_label_8.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+    welcome_label_8.grid(row=1, column=1, padx=20, pady=5, sticky="w")
 
     new_train_plan_label = tk.Label(add_train_window, text="Добавьте данные о тренировке:", font=Message_Font)
-    new_train_plan_label.grid(row=2,column=1, padx=20, pady=5, sticky="w")
+    new_train_plan_label.grid(row=2, column=1, padx=20, pady=5, sticky="w")
     new_train_plan_entry = tk.Entry(add_train_window)
     new_train_plan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
 
@@ -863,13 +905,14 @@ def open_add_train_window():
     save_and_next_button = tk.Button(add_data_window, text="Сохранить и выйти", command=save_data, font=Button_Font)
     save_and_next_button.grid(row=3, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-    ex_window_button = tk.Button(add_data_window, text="Назад", command=open_add_data_window, font=Button_Font) 
+    ex_window_button = tk.Button(add_data_window, text="Назад", command=open_add_data_window, font=Button_Font)
     ex_window_button.grid(row=4, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font) 
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font)
     main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
-def add_meal_plan(): 
+
+def add_meal_plan():
     '''
     """
     Собирает данные о новом плане питания из полей ввода и передает их в функцию ``add_meal_plans``.
@@ -909,6 +952,7 @@ def add_meal_plan():
     products_list = [product.strip().lower() for product in products_input.split(',')]
     products_str = ','.join(products_list)
     add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_str)
+
 
 def open_add_foodplan_window():
     '''
@@ -964,7 +1008,7 @@ def open_add_foodplan_window():
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
     welcome_label_9 = tk.Label(add_foodplan_window, text="Добавьте новый план питания", font=Title_Font)
-    welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+    welcome_label_9.grid(row=1, column=1, padx=20, pady=5, sticky="w")
 
     add_min_age_label = tk.Label(add_foodplan_window, text='Введите возраст (от): ')
     add_min_age_label.grid(row=3, column=1, pady=5, sticky="w")
@@ -1030,6 +1074,7 @@ def return_to_add_data_window_from_aT():
     add_train_window.destroy()
     add_data_window.deiconify()
 
+
 def return_to_add_data_window():
     '''
     """
@@ -1054,9 +1099,9 @@ def return_to_add_data_window():
 
     # Ксюшина часть
 
+
 def add_newfood():
     '''
-    """
     Собирает данные о новом продукте из полей ввода и вызывает функцию для добавления в базу данных.
 
    Эта функция извлекает данные о новом продукте (название, калорийность, белки, жиры, углеводы)
@@ -1079,13 +1124,15 @@ def add_newfood():
    :return: None
        Функция не возвращает значения.
    :rtype: None'''
+   
     name = add_name_entry.get()
-    kilocalories= add_kilocalories_entry.get()
-    protein_gramms= add_protein_gramms_entry.get()
+    kilocalories = add_kilocalories_entry.get()
+    protein_gramms = add_protein_gramms_entry.get()
     fat_gramms = add_fat_gramms_entry.get()
-    carbohydrates_gramms=add_carbohydrates_gramms_entry.get()
-    serving_size_gramms=int(100)
+    carbohydrates_gramms = add_carbohydrates_gramms_entry.get()
+    serving_size_gramms = int(100)
     add_newfoods(name, kilocalories, protein_gramms, fat_gramms, carbohydrates_gramms, serving_size_gramms)
+
 
 def open_add_newfood_window():
     '''
@@ -1136,41 +1183,53 @@ def open_add_newfood_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность", font=Title_Font)
-    welcome_label_9.grid(row=1,column=1, padx=20, pady=5, sticky="w")
+    welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность",
+                               font=Title_Font)
+    welcome_label_9.grid(row=1, column=1, padx=20, pady=5, sticky="w")
 
-    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта с большой буквы:', font=Message_Font)
+    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта с большой буквы:',
+                              font=Message_Font)
     add_name_label.grid(row=3, column=1, padx=20, pady=5, sticky="w")
     add_name_entry = tk.Entry(add_newfood_window)
     add_name_entry.grid(row=3, column=2, padx=20, pady=5, sticky="e")
 
-    add_kilocalories_label = tk.Label(add_newfood_window, text='Введите количество килокалорий, содержащихся в 100 граммах введённого Вами продукта:', font=Message_Font)
-    add_kilocalories_label.grid(row=4, column=1,padx=20, pady=5, sticky="w")
+    add_kilocalories_label = tk.Label(add_newfood_window,
+                                      text='Введите количество килокалорий, содержащихся в 100 граммах введённого Вами продукта:',
+                                      font=Message_Font)
+    add_kilocalories_label.grid(row=4, column=1, padx=20, pady=5, sticky="w")
     add_kilocalories_entry = tk.Entry(add_newfood_window)
-    add_kilocalories_entry.grid(row=4, column=2,padx=20, pady=5, sticky="e")
+    add_kilocalories_entry.grid(row=4, column=2, padx=20, pady=5, sticky="e")
 
-    add_protein_gramms_label = tk.Label(add_newfood_window, text='Введите количество белков (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
+    add_protein_gramms_label = tk.Label(add_newfood_window,
+                                        text='Введите количество белков (в граммах), содержащихся в 100 граммах продукта:',
+                                        font=Message_Font)
     add_protein_gramms_label.grid(row=5, column=1, padx=20, pady=5, sticky="w")
     add_protein_gramms_entry = tk.Entry(add_newfood_window)
     add_protein_gramms_entry.grid(row=5, column=2, padx=20, pady=5, sticky="e")
 
-    add_fat_gramms_label = tk.Label(add_newfood_window, text='Введите количество жиров (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
-    add_fat_gramms_label.grid(row=6, column=1,padx=20, pady=5, sticky="w")
+    add_fat_gramms_label = tk.Label(add_newfood_window,
+                                    text='Введите количество жиров (в граммах), содержащихся в 100 граммах продукта:',
+                                    font=Message_Font)
+    add_fat_gramms_label.grid(row=6, column=1, padx=20, pady=5, sticky="w")
     add_fat_gramms_entry = tk.Entry(add_newfood_window)
     add_fat_gramms_entry.grid(row=6, column=2, padx=20, pady=5, sticky="e")
 
-    add_carbohydrates_gramms_label = tk.Label(add_newfood_window, text='Введите количество углеводов (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
+    add_carbohydrates_gramms_label = tk.Label(add_newfood_window,
+                                              text='Введите количество углеводов (в граммах), содержащихся в 100 граммах продукта:',
+                                              font=Message_Font)
     add_carbohydrates_gramms_label.grid(row=7, column=1, padx=20, pady=5, sticky="w")
     add_carbohydrates_gramms_entry = tk.Entry(add_newfood_window)
     add_carbohydrates_gramms_entry.grid(row=7, column=2, padx=20, pady=5, sticky="e")
 
-    add_newfood_button = tk.Button(add_newfood_window, text="Сохранить и продолжить", command=add_newfood, font=Button_Font)
-    add_newfood_button.grid(row=10, columnspan=3,padx=20, pady=20)
+    add_newfood_button = tk.Button(add_newfood_window, text="Сохранить и продолжить", command=add_newfood,
+                                   font=Button_Font)
+    add_newfood_button.grid(row=10, columnspan=3, padx=20, pady=20)
 
-    to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1, font=Button_Font)
-    to_add_data_window_button.grid(row=11, columnspan=3,padx=20, pady=(5, 20))
+    to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1,
+                                          font=Button_Font)
+    to_add_data_window_button.grid(row=11, columnspan=3, padx=20, pady=(5, 20))
 
-    
+
 def back_to_add_data_window1():
     global add_newfood_window, is_add_newfood_window_open
     '''
@@ -1190,7 +1249,7 @@ def back_to_add_data_window1():
    :rtype: None'''
     add_newfood_window.destroy()
     add_data_window.deiconify()
-    
+
 
 if __name__ == "__main__":
     height, weight, age, gendr = 0, 0, 0, ""
