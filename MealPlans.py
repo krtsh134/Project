@@ -4,7 +4,36 @@ from tkinter import messagebox
 
 
 def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_needed):
+    '''
+    """
+    Добавляет планы питания в базу данных.
 
+    Эта функция выполняет вставку данных о планах питания в таблицу MealPlans
+    базы данных health_control.db. Данные включают минимальный и максимальный возраст,
+    минимальный и максимальный индекс массы тела (BMI), описание плана, время
+    и необходимые продукты.
+
+    :param age_min: Минимальный возраст для плана питания.
+    :type age_min: int
+    :param age_max: Максимальный возраст для плана питания.
+    :type age_max: int
+    :param bmi_min: Минимальный индекс массы тела для плана питания.
+    :type bmi_min: float
+    :param bmi_max: Максимальный индекс массы тела для плана питания.
+    :type bmi_max: float
+    :param description: Описание плана питания.
+    :type description: str
+    :param time: Время, когда план питания должен быть выполнен.
+    :type time: str
+    :param products_needed: Список необходимых продуктов для плана питания.
+    :type products_needed: str
+
+    :raises Exception: Если возникает ошибка при работе с базой данных,
+                       будет вызвано исключение с сообщением об ошибке.
+
+    :return: None
+        Функция не возвращает значения, но выводит сообщение об успехе или ошибке.
+    '''
     cnct = sqlite3.connect('health_control.db')
     cursor = cnct.cursor()
 
@@ -26,6 +55,31 @@ def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, produc
 
 
 def get_meal_plan(age, bmi, available_foods_list):
+    """
+    Получает план питания на основе возраста, индекса массы тела (BMI) и доступных продуктов.
+
+    Эта функция извлекает планы питания из базы данных health_control.db на основе
+    заданного возраста и BMI. Она также проверяет, какие продукты доступны, и выбирает
+    наиболее подходящие варианты для завтрака, обеда и ужина.
+
+    :param age: Возраст пользователя.
+    :type age: int
+    :param bmi: Индекс массы тела пользователя.
+    :type bmi: float
+    :param available_foods_list: Список доступных продуктов.
+    :type available_foods_list: list of str
+
+    :raises sqlite3.Error: Если возникает ошибка при работе с базой данных,
+                           будет вызвано исключение с сообщением об ошибке.
+
+    :return: Словарь с выбранными блюдами для завтрака, обеда и ужина.
+             Структура возвращаемого значения:
+             {
+                 'breakfast': (description, products_needed) or None,
+                 'lunch': (description, products_needed) or None,
+                 'dinner': (description, products_needed) or None
+             }
+    """
     meal_plan = {'breakfast': None, 'lunch': None, 'dinner': None}
 
     try:
@@ -48,7 +102,6 @@ def get_meal_plan(age, bmi, available_foods_list):
 
                 if first_meals[meal_time] is None:
                     first_meals[meal_time] = (description, products_needed)
-            print(available_foods_list)
             for meal_time in grouped_meals:
                 best_match = None
                 is_match = False
@@ -59,7 +112,6 @@ def get_meal_plan(age, bmi, available_foods_list):
                     for food in available_foods_list:
                         if food.lower().strip() in  ''.join(needed_products):
                             matches+=1
-                            print( str(needed_products))
                     if matches > 0:
                         best_match = (description, products_needed)
                         is_match = True
@@ -67,7 +119,6 @@ def get_meal_plan(age, bmi, available_foods_list):
                 if is_match:
                     meal_plan[meal_time] = best_match
                 else:
-                    print(best_match)
                     meal_plan[meal_time] = first_meals[meal_time]
 
     except sqlite3.Error as e:
