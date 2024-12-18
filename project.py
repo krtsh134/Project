@@ -561,6 +561,8 @@ def open_counter_kcal_window():
     back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3, font=Button_Font)
     back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e")
 
+main_window=MagicMock()
+counter_kcal_window=MagicMock()
 def back_to_add_data_window3():
     global counter_kcal_window
     counter_kcal_window.destroy()
@@ -688,10 +690,10 @@ def calculate_and_display():
         product_list.clear()
         product_listbox.delete(0, tk.END)
 
-    except KeyError as e:
-        messagebox.showerror("Product Error", str(e))
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
+    except KeyError:
+        messagebox.showerror("Product Error", str(KeyError))
+    except Exception:
+        messagebox.showerror("Error", str(Exception))
 
 
 def open_add_data_window():
