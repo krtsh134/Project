@@ -117,8 +117,8 @@ def open_parametrs_window():
     gendr_label = tk.Label(parametrs_window, text="Пол:", font=Message_Font)
     gendr_label.grid(row=4, column=1, padx=20, pady=5, sticky="w")
     gendr_var = tk.StringVar(parametrs_window)
-    gendr_var.set("Мужской")
-    gendr_options = ["Мужской", "Женский"]
+    gendr_var.set("Male")
+    gendr_options = ["Male", "Female"]
     gendr_menu = tk.OptionMenu(parametrs_window, gendr_var, *gendr_options)
     gendr_menu.grid(row=4, column=2, padx=20, pady=5, sticky="w")
 
@@ -285,7 +285,7 @@ def display_train_plan():
     if plans is None or not plans:
         messagebox.showinfo("Результат", "Не найдено тренировочных планов.")
     else:
-        result = "\n".join([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans])
+        result = "\n".join(set([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans]))
         messagebox.showinfo("Тренировочные планы", result)
 
         result_text_1.delete(1.0, tk.END)
@@ -319,7 +319,7 @@ def open_train_window():
     main_window.withdraw()
     train_window = tk.Tk()
     train_window.title("План тренировки")
-    train_window.geometry("600x750+450+100")
+    train_window.geometry("600x470+450+100")
 
     try:
         logo = tk.PhotoImage(file='logo.png')
