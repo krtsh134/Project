@@ -3,7 +3,7 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
 from Train_plans import *
-from count_nutritional_value import add_newfoods
+from calcul_nutr_val import add_newfoods
 
 
 def open_hello_window():
