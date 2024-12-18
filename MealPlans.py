@@ -3,7 +3,7 @@ from project import *
 from tkinter import messagebox
 
 
-def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_needed):
+def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, products_needed, db_name='health_control.db'):
     '''
     """
     Добавляет планы питания в базу данных.
@@ -34,7 +34,7 @@ def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, produc
     :return: None
         Функция не возвращает значения, но выводит сообщение об успехе или ошибке.
     '''
-    cnct = sqlite3.connect('health_control.db')
+    cnct = sqlite3.connect(db_name)
     cursor = cnct.cursor()
 
     sql = """INSERT INTO MealPlans 
@@ -54,7 +54,7 @@ def add_meal_plans(age_min, age_max, bmi_min, bmi_max, description, time, produc
 
 
 
-def get_meal_plan(age, bmi, available_foods_list):
+def get_meal_plan(age, bmi, available_foods_list, db_name='health_control.db'):
     """
     Получает план питания на основе возраста, индекса массы тела (BMI) и доступных продуктов.
 
@@ -83,7 +83,7 @@ def get_meal_plan(age, bmi, available_foods_list):
     meal_plan = {'breakfast': None, 'lunch': None, 'dinner': None}
 
     try:
-        with sqlite3.connect('health_control.db') as cnct:
+        with sqlite3.connect(db_name) as cnct:
             cursor = cnct.cursor()
             cursor.execute("""
             SELECT time, description, products_needed FROM MealPlans
