@@ -7,6 +7,7 @@ from count_nutritional_value import add_newfoods
 from unittest.mock import MagicMock
 
 
+
 def open_hello_window():
     """Открывает приветственное окно приложения.
 
@@ -578,10 +579,7 @@ def back_to_add_data_window3():
     counter_kcal_window.destroy()
     main_window.deiconify()
 
-name_entry = MagicMock()
-size_entry = MagicMock()
-product_listbox = MagicMock()
-product_list = []
+
 
 
 def add_product_for_counting():
@@ -607,7 +605,7 @@ def add_product_for_counting():
         Функция не возвращает значения.
     :rtype: None
     """
-    global name_entry, size_entry, product_listbox, product_list
+    global name_entry, size_entry, product_listbox, weight, product_list
     name = name_entry.get().strip()
     weight_str = size_entry.get().strip()
     if not name or not weight_str:
@@ -691,25 +689,16 @@ def calculate_and_display():
        Функция не возвращает значения.
    :rtype: None
    """
-
     global result_label, product_list, product_listbox
-
     try:
-       
         product_data = fetch_products_from_db()
-
-       
         result = calculate_nutritional_value(product_list, product_data)
-
-        
         result_text = (
             f"Килокалории: {result['kilocalories']}\n"
             f"Белки: {result['proteins']}\n"
             f"Жиры: {result['fats']}\n"
             f"Углеводы: {result['carbohydrates']}"
         )
-
-       
         result_label.config(text=result_text)
         product_list.clear()
         product_listbox.delete(0, tk.END)
@@ -1210,7 +1199,8 @@ def open_add_newfood_window():
     to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1, font=Button_Font)
     to_add_data_window_button.grid(row=11, columnspan=3, padx=20, pady=(5, 20))
 
-
+add_data_window=MagicMock()
+add_newfood_window=MagicMock()
 def back_to_add_data_window1():
     """Закрывает окно добавления нового продукта и возвращает пользователя в окно добавления данных.
 
