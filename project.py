@@ -3,13 +3,12 @@ import tkinter.font as tkFont
 from tkinter import messagebox
 from MealPlans import *
 from Train_plans import *
-from calcul_nutr_val import add_newfoods
+from count_nutritional_value import add_newfoods
+from unittest.mock import MagicMock
 
 
 def open_hello_window():
-    '''
-    """
-    Открывает приветственное окно приложения.
+    """Открывает приветственное окно приложения.
 
    Эта функция создает новое окно Tkinter (``hello_window``), которое отображает
    приветственное сообщение пользователю и кнопку для перехода к следующему шагу (вводу параметров).
@@ -22,7 +21,8 @@ def open_hello_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global hello_window
 
     hello_window = tk.Tk()
@@ -47,9 +47,7 @@ def open_hello_window():
 
 def open_parametrs_window():
     global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, is_parametrs_window_open, age, bmi
-    '''
-    """
-    Открывает окно для ввода пользовательских параметров (рост, вес, возраст, пол).
+    """Открывает окно для ввода пользовательских параметров (рост, вес, возраст, пол).
 
    Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
    информации о пользователе (рост, вес, возраст и пол). После ввода данных вычисляется
@@ -77,7 +75,8 @@ def open_parametrs_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     try:
         hello_window.destroy()
     except (NameError, tk.TclError):
@@ -179,9 +178,7 @@ def open_parametrs_window():
 
 
 def from_par_to_main():
-    '''
-    """
-    Закрывает окно с параметрами и возвращает пользователя в главное меню.
+    """Закрывает окно с параметрами и возвращает пользователя в главное меню.
 
    Эта функция уничтожает окно с параметрами (``parametrs_window``) и открывает главное меню,
    вызывая функцию `open_main_menu`.
@@ -193,15 +190,14 @@ def from_par_to_main():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     parametrs_window.destroy()
     open_main_menu()
 
 
 def open_main_menu():
-    '''
-    """
-    Открывает главное меню приложения, предоставляющее пользователю выбор действий.
+    """Открывает главное меню приложения, предоставляющее пользователю выбор действий.
 
    Эта функция создает новое окно Tkinter (``main_window``) с главным меню, которое позволяет
    пользователю перейти к различным разделам приложения:
@@ -223,7 +219,8 @@ def open_main_menu():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global main_window, parametrs_window, is_main_window_open, is_parametrs_window_open
 
     if is_parametrs_window_open:
@@ -263,9 +260,7 @@ def open_main_menu():
 
 
 def display_train_plan():
-    '''
-    """
-    Получает и отображает планы тренировок на основе введенных пользователем данных.
+    """Получает и отображает планы тренировок на основе введенных пользователем данных.
 
    Эта функция запрашивает планы тренировок у функции `get_train_plans` и отображает
    их в виджетах `result_text_1` (для первого этапа) и `result_text_2` (для второго этапа).
@@ -287,7 +282,8 @@ def display_train_plan():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     plans = get_train_plans(age, bmi, gendr)
     print(plans)
     result = ""
@@ -302,9 +298,7 @@ def display_train_plan():
 
 
 def open_train_window():
-    '''
-    """
-    Открывает окно с планом тренировок, позволяющее пользователю получить рекомендации.
+    """Открывает окно с планом тренировок, позволяющее пользователю получить рекомендации.
 
    Эта функция создает новое окно Tkinter (``train_window``), предназначенное для отображения
    рекомендаций по плану тренировок. Пользователь может нажать кнопку для получения
@@ -323,7 +317,8 @@ def open_train_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global main_window, train_window, result_text_1
 
     main_window.withdraw()
@@ -359,9 +354,7 @@ def open_train_window():
 
 
 def return_to_main_menu():
-    '''
-    """
-    Закрывает окно с планами тренировок и возвращает пользователя в главное меню.
+    """Закрывает окно с планами тренировок и возвращает пользователя в главное меню.
 
    Эта функция уничтожает окно с планами тренировок (``train_window``) и отображает главное меню,
    делая его видимым с помощью метода `deiconify`.
@@ -375,15 +368,14 @@ def return_to_main_menu():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     train_window.destroy()
     main_window.deiconify()
 
 
 def display_meal_plan():
-    '''
-    """
-    Получает и отображает план питания на основе введенных пользователем данных.
+    """Получает и отображает план питания на основе введенных пользователем данных.
 
    Эта функция считывает введенные пользователем продукты, запрашивает план питания у функции
    ``get_meal_plan``, и отображает полученный план в виджете `result_text`. Также обрабатывает возможные ошибки ввода.
@@ -402,7 +394,8 @@ def display_meal_plan():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     try:
         available_foods_input = available_foods_entry.get()
 
@@ -424,9 +417,7 @@ def display_meal_plan():
 
 
 def open_foodplan_window():
-    '''
-    """
-    Открывает окно с планом питания, позволяющее пользователю получить рекомендации по питанию.
+    """Открывает окно с планом питания, позволяющее пользователю получить рекомендации по питанию.
 
    Эта функция создает новое окно Tkinter (``foodplan_window``), предназначенное для
    отображения рекомендаций по плану питания. Пользователь может ввести имеющиеся у него продукты (через запятую),
@@ -445,7 +436,8 @@ def open_foodplan_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global main_window, foodplan_window, available_foods_entry, result_text, age_entry, bmi, available_foods_entry, result_text
     main_window.withdraw()
 
@@ -481,9 +473,7 @@ def open_foodplan_window():
 
 
 def return_to_main_window():
-    '''
-    """
-    Закрывает окно с планами питания и возвращает пользователя в главное меню.
+    """Закрывает окно с планами питания и возвращает пользователя в главное меню.
 
    Эта функция уничтожает окно с планами питания (``foodplan_window``) и отображает главное меню,
    делая его видимым с помощью метода `deiconify`.
@@ -497,15 +487,14 @@ def return_to_main_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     foodplan_window.destroy()
     main_window.deiconify()
 
 
 def open_counter_kcal_window():
-    '''
-    """
-    Открывает окно счетчика КБЖУ, позволяющее пользователю добавлять продукты и рассчитывать их суммарную энергетическую ценность.
+    """Открывает окно счетчика КБЖУ, позволяющее пользователю добавлять продукты и рассчитывать их суммарную энергетическую ценность.
 
    Эта функция создает новое окно Tkinter (``counter_kcal_window``), предназначенное для подсчета
    суммарной энергетической ценности продуктов. Пользователь может вводить названия продуктов и их размеры (в граммах),
@@ -531,7 +520,8 @@ def open_counter_kcal_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
 
     global main_window, counter_kcal_window, name_entry, size_entry, product_listbox, product_list, result_label, back_button
     main_window.withdraw()
@@ -551,8 +541,7 @@ def open_counter_kcal_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label = tk.Label(counter_kcal_window,
-                             text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font)
+    welcome_label = tk.Label(counter_kcal_window, text="Калькулятор энергетической ценности съеденных за день продуктов", font=Title_Font)
     welcome_label.grid(row=0, column=0, columnspan=3, padx=20, pady=10)
 
     name_label = tk.Label(counter_kcal_window, text="Введите название продукта:", font=Message_Font)
@@ -578,33 +567,25 @@ def open_counter_kcal_window():
     product_listbox.grid(row=5, column=0, columnspan=3, padx=20, pady=10, sticky="w")
     product_listbox.config(height=5)
 
-    back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3,
-                            font=Button_Font)
+    back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3, font=Button_Font)
     back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e")
 
+counter_kcal_window = MagicMock()
+main_window = MagicMock()
 
 def back_to_add_data_window3():
+    global counter_kcal_window
     counter_kcal_window.destroy()
     main_window.deiconify()
 
-
-def open_add_data_window():
-    global main_window, add_data_window, is_add_data_window_open
-    is_add_data_window_open = True
-    add_data_window = tk.Tk()
-    add_data_window.title("Добавление данных")
-    add_data_window.geometry("500x300+400+200")
-    try:
-        logo = tk.PhotoImage(file='logo.png')
-        add_data_window.iconphoto(False, logo)
-    except tk.TclError:
-        print("Warning: logo.png not found.")
+name_entry = MagicMock()
+size_entry = MagicMock()
+product_listbox = MagicMock()
+product_list = []
 
 
 def add_product_for_counting():
-    '''
-    """
-    Добавляет продукт с его массой в список для подсчета калорий.
+    """Добавляет продукт с его массой в список для подсчета калорий.
 
     Эта функция получает название продукта и его массу из соответствующих виджетов ввода,
     проверяет корректность ввода, добавляет продукт и его массу в список `product_list`,
@@ -624,7 +605,8 @@ def add_product_for_counting():
 
     :return: None
         Функция не возвращает значения.
-    :rtype: None'''
+    :rtype: None
+    """
     global name_entry, size_entry, product_listbox, product_list
     name = name_entry.get().strip()
     weight_str = size_entry.get().strip()
@@ -641,8 +623,7 @@ def add_product_for_counting():
 
 
 def calculate_nutritional_value(product_list, product_data):
-    """
-    Вычисляет суммарные пищевые значения продуктов.
+    """Вычисляет суммарные пищевые значения продуктов.
 
     :param product_list: Список кортежей с именем продукта и размером [(str, int)].
     :type product_list: list
@@ -673,8 +654,7 @@ def calculate_nutritional_value(product_list, product_data):
 
 
 def fetch_products_from_db(database="health_control.db"):
-    """
-    Извлекает информацию о продуктах из базы данных.
+    """Извлекает информацию о продуктах из базы данных.
 
     :param database: Путь к файлу базы данных.
     :type database: str
@@ -693,9 +673,25 @@ def fetch_products_from_db(database="health_control.db"):
 
 
 def calculate_and_display():
-    """
-    Взаимодействует с интерфейсом: получает данные, вычисляет и отображает результаты.
-    """
+    """Вычисляет и отображает питательную ценность продуктов, извлекая данные из базы данных.
+
+   Эта функция получает данные о продуктах из базы данных, вычисляет их питательную ценность и отображает результаты в пользовательском интерфейсе. Результаты включают информацию о килокалориях, белках, жирах и углеводах.
+
+   :global result_label: Виджет метки, в котором отображаются результаты вычислений.
+   :type result_label: tk.Label
+   :global product_list: Список продуктов, для которых будет рассчитана питательная ценность.
+   :type product_list: list
+   :global product_listbox: Виджет списка, который отображает список продуктов.
+   :type product_listbox: tk.Listbox
+
+   :raises KeyError: Возникает, если отсутствует необходимый ключ в данных о продукте. В этом случае пользователю показывается сообщение об ошибке с указанием отсутствующего ключа.
+   :raises Exception: Обрабатывает все другие исключения, которые могут возникнуть во время выполнения функции, отображая общее сообщение об ошибке пользователю.
+
+   :return: None
+       Функция не возвращает значения.
+   :rtype: None
+   """
+
     global result_label, product_list, product_listbox
 
     try:
@@ -725,9 +721,7 @@ def calculate_and_display():
 
 
 def open_add_data_window():
-    '''
-    """
-    Открывает окно добавления данных, предоставляющее пользователю выбор действий.
+    """Открывает окно добавления данных, предоставляющее пользователю выбор действий.
 
    Эта функция создает новое окно Tkinter (``add_data_window``), которое позволяет
    пользователю выбрать одно из следующих действий:
@@ -747,13 +741,20 @@ def open_add_data_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global add_data_window, is_main_window_open, main_window
     if is_main_window_open:
         main_window.destroy()
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
     add_data_window.geometry("500x300+500+200")
+
+    try:
+        logo = tk.PhotoImage(file='logo.png')
+        add_data_window.iconphoto(False, logo)
+    except tk.TclError:
+        print("Warning: logo.png not found.")
 
     Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
@@ -779,9 +780,7 @@ def open_add_data_window():
 
 
 def return_to_main_from_add():
-    '''
-    """
-    Закрывает окно добавления данных и возвращает пользователя в главное меню.
+    """Закрывает окно добавления данных и возвращает пользователя в главное меню.
 
    Эта функция уничтожает окно добавления данных (``add_data_window``) и открывает главное меню,
    вызывая функцию `open_main_menu`.
@@ -793,15 +792,14 @@ def return_to_main_from_add():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     add_data_window.destroy()
     open_main_menu()
 
 
 def open_add_train_window():
-    '''
-    """
-    Открывает окно добавления нового плана тренировок.
+    """Открывает окно добавления нового плана тренировок.
 
    Эта функция создает новое окно Tkinter, предназначенное для ввода информации о новом плане тренировок.
    Пользователь может ввести описание нового плана тренировок в текстовое поле.
@@ -818,7 +816,8 @@ def open_add_train_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
 
     global main_window, add_data_window, add_train_window
     add_train_window = tk.Tk()
@@ -875,9 +874,7 @@ def open_add_train_window():
     new_train_plan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
 
     def save_data():
-        '''
-        """
-        Сохраняет введенный пользователем новый план тренировок и переходит в главное меню.
+        """Сохраняет введенный пользователем новый план тренировок и переходит в главное меню.
 
    Эта функция считывает данные, введенные пользователем в поле ввода нового плана тренировок
    (``new_train_plan_entry``), сохраняет их в глобальную переменную ``new_train_plan`` и
@@ -893,7 +890,8 @@ def open_add_train_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
         global new_train_plan
         try:
             new_train_plan = str(new_train_plan_entry.get())
@@ -913,9 +911,7 @@ def open_add_train_window():
 
 
 def add_meal_plan():
-    '''
-    """
-    Собирает данные о новом плане питания из полей ввода и передает их в функцию ``add_meal_plans``.
+    """Собирает данные о новом плане питания из полей ввода и передает их в функцию ``add_meal_plans``.
 
    Эта функция считывает данные, введенные пользователем в полях ввода окна добавления нового плана питания,
    и передает их в функцию ``add_meal_plans`` для дальнейшей обработки (например, сохранения в базе данных).
@@ -940,7 +936,8 @@ def add_meal_plan():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     age_min = add_age_min_entry.get()
     age_max = add_age_max_entry.get()
     bmi_min = add_min_bmi_entry.get()
@@ -955,9 +952,7 @@ def add_meal_plan():
 
 
 def open_add_foodplan_window():
-    '''
-    """
-    Открывает окно добавления нового плана питания.
+    """Открывает окно добавления нового плана питания.
 
    Эта функция создает новое окно Tkinter, предназначенное для ввода информации о новом плане питания.
    Пользователь может ввести минимальный и максимальный возраст, минимальный и максимальный ИМТ,
@@ -988,7 +983,8 @@ def open_add_foodplan_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
 
     global main_window, add_data_window, add_foodplan_window, add_age_min_entry, add_age_max_entry, add_min_bmi_entry, add_max_bmi_entry, add_description_entry, add_time_entry, add_products_entry
 
@@ -1053,9 +1049,7 @@ def open_add_foodplan_window():
 
 
 def return_to_add_data_window_from_aT():
-    '''
-    """
-    Возвращает пользователя в окно добавления данных из окна добавления тренировки.
+    """Возвращает пользователя в окно добавления данных из окна добавления тренировки.
 
    Эта функция уничтожает окно добавления тренировки (``add_train_window``)
    и отображает окно добавления данных (``add_data_window``), делая его видимым.
@@ -1070,15 +1064,14 @@ def return_to_add_data_window_from_aT():
    :return: None
        Функция не возвращает значения.
 
-   :rtype: None'''
+   :rtype: None
+   """
     add_train_window.destroy()
     add_data_window.deiconify()
 
 
 def return_to_add_data_window():
-    '''
-    """
-    Возвращает пользователя в окно добавления данных из окна добавления плана питания.
+    """Возвращает пользователя в окно добавления данных из окна добавления плана питания.
 
    Эта функция уничтожает окно добавления плана питания (``add_foodplan_window``)
    и отображает окно добавления данных (``add_data_window``), делая его видимым.
@@ -1093,16 +1086,16 @@ def return_to_add_data_window():
    :return: None
        Функция не возвращает значения.
 
-   :rtype: None'''
+   :rtype: None
+   """
     add_foodplan_window.destroy()
     add_data_window.deiconify()
 
-    # Ксюшина часть
+
 
 
 def add_newfood():
-    '''
-    Собирает данные о новом продукте из полей ввода и вызывает функцию для добавления в базу данных.
+    """Собирает данные о новом продукте из полей ввода и вызывает функцию для добавления в базу данных.
 
    Эта функция извлекает данные о новом продукте (название, калорийность, белки, жиры, углеводы)
    из соответствующих виджетов ввода и передает их вместе с фиксированным размером порции (100 г)
@@ -1123,7 +1116,8 @@ def add_newfood():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
    
     name = add_name_entry.get()
     kilocalories = add_kilocalories_entry.get()
@@ -1135,9 +1129,7 @@ def add_newfood():
 
 
 def open_add_newfood_window():
-    '''
-    """
-    Открывает окно для добавления нового продукта и его пищевой ценности.
+    """Открывает окно для добавления нового продукта и его пищевой ценности.
 
    Эта функция создает новое окно Tkinter (``add_newfood_window``), предназначенное для
    ввода данных о новом продукте (название, калорийность, белки, жиры, углеводы).
@@ -1166,7 +1158,8 @@ def open_add_newfood_window():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
     global main_window, add_data_window, add_newfood_window, is_add_newfood_window_open, add_name_entry, add_kilocalories_entry, add_protein_gramms_entry, add_fat_gramms_entry, add_carbohydrates_gramms_entry
     add_data_window.withdraw()
     is_add_newfood_window_open = True
@@ -1183,58 +1176,43 @@ def open_add_newfood_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность",
-                               font=Title_Font)
+    welcome_label_9 = tk.Label(add_newfood_window, text="Добавить новый продукт и его энергетическую ценность", font=Title_Font)
     welcome_label_9.grid(row=1, column=1, padx=20, pady=5, sticky="w")
 
-    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта с большой буквы:',
-                              font=Message_Font)
+    add_name_label = tk.Label(add_newfood_window, text='Введите название нового продукта с большой буквы:', font=Message_Font)
     add_name_label.grid(row=3, column=1, padx=20, pady=5, sticky="w")
     add_name_entry = tk.Entry(add_newfood_window)
     add_name_entry.grid(row=3, column=2, padx=20, pady=5, sticky="e")
 
-    add_kilocalories_label = tk.Label(add_newfood_window,
-                                      text='Введите количество килокалорий, содержащихся в 100 граммах введённого Вами продукта:',
-                                      font=Message_Font)
+    add_kilocalories_label = tk.Label(add_newfood_window, text='Введите количество килокалорий, содержащихся в 100 граммах введённого Вами продукта:', font=Message_Font)
     add_kilocalories_label.grid(row=4, column=1, padx=20, pady=5, sticky="w")
     add_kilocalories_entry = tk.Entry(add_newfood_window)
     add_kilocalories_entry.grid(row=4, column=2, padx=20, pady=5, sticky="e")
 
-    add_protein_gramms_label = tk.Label(add_newfood_window,
-                                        text='Введите количество белков (в граммах), содержащихся в 100 граммах продукта:',
-                                        font=Message_Font)
+    add_protein_gramms_label = tk.Label(add_newfood_window, text='Введите количество белков (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
     add_protein_gramms_label.grid(row=5, column=1, padx=20, pady=5, sticky="w")
     add_protein_gramms_entry = tk.Entry(add_newfood_window)
     add_protein_gramms_entry.grid(row=5, column=2, padx=20, pady=5, sticky="e")
 
-    add_fat_gramms_label = tk.Label(add_newfood_window,
-                                    text='Введите количество жиров (в граммах), содержащихся в 100 граммах продукта:',
-                                    font=Message_Font)
+    add_fat_gramms_label = tk.Label(add_newfood_window, text='Введите количество жиров (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
     add_fat_gramms_label.grid(row=6, column=1, padx=20, pady=5, sticky="w")
     add_fat_gramms_entry = tk.Entry(add_newfood_window)
     add_fat_gramms_entry.grid(row=6, column=2, padx=20, pady=5, sticky="e")
 
-    add_carbohydrates_gramms_label = tk.Label(add_newfood_window,
-                                              text='Введите количество углеводов (в граммах), содержащихся в 100 граммах продукта:',
-                                              font=Message_Font)
+    add_carbohydrates_gramms_label = tk.Label(add_newfood_window, text='Введите количество углеводов (в граммах), содержащихся в 100 граммах продукта:', font=Message_Font)
     add_carbohydrates_gramms_label.grid(row=7, column=1, padx=20, pady=5, sticky="w")
     add_carbohydrates_gramms_entry = tk.Entry(add_newfood_window)
     add_carbohydrates_gramms_entry.grid(row=7, column=2, padx=20, pady=5, sticky="e")
 
-    add_newfood_button = tk.Button(add_newfood_window, text="Сохранить и продолжить", command=add_newfood,
-                                   font=Button_Font)
+    add_newfood_button = tk.Button(add_newfood_window, text="Сохранить и продолжить", command=add_newfood, font=Button_Font)
     add_newfood_button.grid(row=10, columnspan=3, padx=20, pady=20)
 
-    to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1,
-                                          font=Button_Font)
+    to_add_data_window_button = tk.Button(add_newfood_window, text="Назад", command=back_to_add_data_window1, font=Button_Font)
     to_add_data_window_button.grid(row=11, columnspan=3, padx=20, pady=(5, 20))
 
 
 def back_to_add_data_window1():
-    global add_newfood_window, is_add_newfood_window_open
-    '''
-    """
-    Закрывает окно добавления нового продукта и возвращает пользователя в окно добавления данных.
+    """Закрывает окно добавления нового продукта и возвращает пользователя в окно добавления данных.
 
    Эта функция уничтожает окно добавления нового продукта (``add_newfood_window``) и открывает окно
    добавления данных, вызывая функцию `open_add_data_window`.
@@ -1246,7 +1224,9 @@ def back_to_add_data_window1():
 
    :return: None
        Функция не возвращает значения.
-   :rtype: None'''
+   :rtype: None
+   """
+    global add_newfood_window, is_add_newfood_window_open
     add_newfood_window.destroy()
     add_data_window.deiconify()
 
