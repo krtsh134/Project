@@ -47,7 +47,7 @@ def open_hello_window():
 
 
 def open_parametrs_window():
-    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, is_parametrs_window_open, age, bmi
+    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, age, bmi
     """Открывает окно для ввода пользовательских параметров (рост, вес, возраст, пол).
 
    Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
@@ -82,8 +82,6 @@ def open_parametrs_window():
         hello_window.destroy()
     except (NameError, tk.TclError):
         pass
-
-    is_parametrs_window_open = True
 
     parametrs_window = tk.Tk()
     parametrs_window.title("Ваши параметры")
@@ -167,7 +165,7 @@ def open_parametrs_window():
             gendr = gendr_var.get()
             bmi = round(weight / ((height / 100) ** 2), -1)
             print(f"Рост: {height} см, Вес: {weight} кг, Возраст: {age}, Пол: {gendr}, ИМТ: {bmi}")
-            open_main_menu()
+            from_par_to_main()
         except ValueError:
             print("Ошибка: Введите числовые значения.")
 
@@ -222,11 +220,7 @@ def open_main_menu():
        Функция не возвращает значения.
    :rtype: None
    """
-    global main_window, parametrs_window, is_main_window_open, is_parametrs_window_open
-
-    if is_parametrs_window_open:
-        parametrs_window.destroy()
-        is_parametrs_window_open = False
+    global main_window, parametrs_window, is_main_window_open
 
     is_main_window_open = True
 
@@ -263,28 +257,28 @@ def open_main_menu():
 def display_train_plan():
     """Получает и отображает планы тренировок на основе введенных пользователем данных.
 
-   Эта функция запрашивает планы тренировок у функции `get_train_plans` и отображает
-   их в виджетах `result_text_1` (для первого этапа) и `result_text_2` (для второго этапа).
+    Эта функция запрашивает планы тренировок у функции `get_train_plans` и отображает
+    их в виджетах `result_text_1` (для первого этапа) и `result_text_2` (для второго этапа).
     Также обрабатывает возможные ошибки ввода и ошибки при получении данных.
 
-   :global result_text_1: Виджет `tk.Text`, в котором отображается первый вариант плана тренировки.
-   :type result_text_1: tk.Text
-   :global result_text_2: Виджет `tk.Text`, в котором отображается второй вариант плана тренировки.
-   :type result_text_2: tk.Text
-   :global age: Переменная, содержащая возраст пользователя (определена в другом месте).
-   :type age: int
-   :global bmi: Переменная, содержащая индекс массы тела пользователя (определена в другом месте).
-   :type bmi: float
+    :global result_text_1: Виджет `tk.Text`, в котором отображается первый вариант плана тренировки.
+    :type result_text_1: tk.Text
+    :global result_text_2: Виджет `tk.Text`, в котором отображается второй вариант плана тренировки.
+    :type result_text_2: tk.Text
+    :global age: Переменная, содержащая возраст пользователя (определена в другом месте).
+    :type age: int
+    :global bmi: Переменная, содержащая индекс массы тела пользователя (определена в другом месте).
+    :type bmi: float
     :global gendr: Переменная, содержащая пол пользователя (определена в другом месте).
     :type gendr: str
 
-   :raises ValueError: Если возникает ошибка при преобразовании типов данных, сообщение об ошибке вставляется в `result_text_1`.
+    :raises ValueError: Если возникает ошибка при преобразовании типов данных, сообщение об ошибке вставляется в `result_text_1`.
     :raises Exception: Если возникает любое другое исключение, сообщение об ошибке вставляется в `result_text_1`.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     plans = get_train_plans(age, bmi, gendr)
     print(plans)
     result = ""
@@ -301,25 +295,25 @@ def display_train_plan():
 def open_train_window():
     """Открывает окно с планом тренировок, позволяющее пользователю получить рекомендации.
 
-   Эта функция создает новое окно Tkinter (``train_window``), предназначенное для отображения
-   рекомендаций по плану тренировок. Пользователь может нажать кнопку для получения
+    Эта функция создает новое окно Tkinter (``train_window``), предназначенное для отображения
+    рекомендаций по плану тренировок. Пользователь может нажать кнопку для получения
     первого и второго этапа тренировки.
 
-   :global main_window: Ссылка на главное окно приложения (которое будет скрыто).
-   :type main_window: tk.Tk
-   :global train_window: Ссылка на окно плана тренировок (создается в этой функции).
-   :type train_window: tk.Tk
-   :global result_text_1: Виджет `tk.Text` для отображения первого этапа тренировки.
-   :type result_text_1: tk.Text
+    :global main_window: Ссылка на главное окно приложения (которое будет скрыто).
+    :type main_window: tk.Tk
+    :global train_window: Ссылка на окно плана тренировок (создается в этой функции).
+    :type train_window: tk.Tk
+    :global result_text_1: Виджет `tk.Text` для отображения первого этапа тренировки.
+    :type result_text_1: tk.Text
     :global result_text_2: Виджет `tk.Text` для отображения второго этапа тренировки.
-   :type result_text_2: tk.Text
+    :type result_text_2: tk.Text
 
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     global main_window, train_window, result_text_1
 
     main_window.withdraw()
@@ -346,31 +340,27 @@ def open_train_window():
     result_text_1 = tk.Text(train_window, width=50, height=10, font=Message_Font)
     result_text_1.pack(pady=10)
 
-    # main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu, font=Button_Font) 
-    # main_menu_button.pack(pady=5)
-
-    main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu,
-                                 font=Button_Font)
+    main_menu_button = tk.Button(train_window, text="Вернуться в главное меню", command=return_to_main_menu, font=Button_Font) 
     main_menu_button.pack(pady=5)
 
 
 def return_to_main_menu():
     """Закрывает окно с планами тренировок и возвращает пользователя в главное меню.
 
-   Эта функция уничтожает окно с планами тренировок (``train_window``) и отображает главное меню,
-   делая его видимым с помощью метода `deiconify`.
+    Эта функция уничтожает окно с планами тренировок (``train_window``) и отображает главное меню,
+    делая его видимым с помощью метода `deiconify`.
 
-   :global train_window: Ссылка на окно с планами тренировок, которое будет закрыто.
-   :type train_window: tk.Tk
-   :global main_window: Ссылка на главное окно приложения, которое будет отображено.
-   :type main_window: tk.Tk
+    :global train_window: Ссылка на окно с планами тренировок, которое будет закрыто.
+    :type train_window: tk.Tk
+    :global main_window: Ссылка на главное окно приложения, которое будет отображено.
+    :type main_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или отображении главного меню, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или отображении главного меню, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     train_window.destroy()
     main_window.deiconify()
 
@@ -571,15 +561,10 @@ def open_counter_kcal_window():
     back_button = tk.Button(counter_kcal_window, text="Главное меню", command=back_to_add_data_window3, font=Button_Font)
     back_button.grid(row=3, column=3, padx=20, pady=10, sticky="e")
 
-counter_kcal_window = MagicMock()
-main_window = MagicMock()
-
 def back_to_add_data_window3():
     global counter_kcal_window
     counter_kcal_window.destroy()
     main_window.deiconify()
-
-
 
 
 def add_product_for_counting():
@@ -712,29 +697,31 @@ def calculate_and_display():
 def open_add_data_window():
     """Открывает окно добавления данных, предоставляющее пользователю выбор действий.
 
-   Эта функция создает новое окно Tkinter (``add_data_window``), которое позволяет
-   пользователю выбрать одно из следующих действий:
+    Эта функция создает новое окно Tkinter (``add_data_window``), которое позволяет
+    пользователю выбрать одно из следующих действий:
      - Добавить новый план питания
      - Добавить данные о новом продукте (КБЖУ)
      - Добавить новый план тренировок
      - Вернуться в главное меню.
 
-   :global add_data_window: Ссылка на окно добавления данных (создается в этой функции).
-   :type add_data_window: tk.Tk
-   :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
-   :type is_main_window_open: bool
-   :global main_window: Ссылка на главное окно приложения.
-   :type main_window: tk.Tk
+    :global add_data_window: Ссылка на окно добавления данных (создается в этой функции).
+    :type add_data_window: tk.Tk
+    :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
+    :type is_main_window_open: bool
+    :global main_window: Ссылка на главное окно приложения.
+    :type main_window: tk.Tk
 
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
-    global add_data_window, is_main_window_open, main_window
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
+    global add_data_window, is_main_window_open, main_window, is_add_data_window_open
     if is_main_window_open:
         main_window.destroy()
+        is_main_window_open = False
+    is_add_data_window_open = True
     add_data_window = tk.Tk()
     add_data_window.title("Добавление данных")
     add_data_window.geometry("500x300+500+200")
@@ -751,20 +738,16 @@ def open_add_data_window():
     welcome_label_7 = tk.Label(add_data_window, text="Добавить новые данные", font=Title_Font)
     welcome_label_7.pack(pady=20)
 
-    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window,
-                                    font=Button_Font)
+    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window, font=Button_Font)
     add_foodplan_button.pack(pady=5)
 
-    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта",
-                                   command=open_add_newfood_window, font=Button_Font)
+    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта", command=open_add_newfood_window, font=Button_Font)
     add_newfood_button.pack(pady=5)
 
-    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window,
-                                 font=Button_Font)
+    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window, font=Button_Font)
     add_train_button.pack(pady=5)
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add,
-                                 font=Button_Font)
+    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add, font=Button_Font)
     main_menu_button.pack(pady=5)
 
 
@@ -786,64 +769,53 @@ def return_to_main_from_add():
     add_data_window.destroy()
     open_main_menu()
 
+def add_new_train():
+    if 16 <= age <= 20:
+        age_min = 16
+        age_max = 20
+    elif 21 <= age <= 25:
+        age_min = 21
+        age_max = 25
+    elif 26 <= age <= 30:
+        age_min = 26
+        age_max = 30
+    elif 31 <= age <= 35:
+        age_min = 31
+        age_max = 35
+    elif 36 <= age <= 40:
+        age_min = 36
+        age_max = 40
+    elif 41 <= age <= 45:
+        age_min = 41
+        age_max = 45
+    elif 46 <= age <= 50:
+        age_min = 46
+        age_max = 50
+    elif 51 <= age <= 55:
+        age_min = 51
+        age_max = 55
+    if 10 <= bmi <= 20:
+        bmi_min = 10
+        bmi_max = 20
+    elif 20.1 <= bmi <= 25:
+        bmi_min = 20.1
+        bmi_max = 25
+    elif 25.1 <= bmi <= 35:
+        bmi_min = 25.1
+        bmi_max = 35
+    train_number = 'Train_3'
+    description_train = new_train_plan
+    add_train_plans(age_min, age_max, bmi_min, bmi_max, train_number, gendr, description_train)
 
 def open_add_train_window():
-    """Открывает окно добавления нового плана тренировок.
-
-   Эта функция создает новое окно Tkinter, предназначенное для ввода информации о новом плане тренировок.
-   Пользователь может ввести описание нового плана тренировок в текстовое поле.
-   Функция включает в себя кнопку сохранения данных и перехода в главное меню, а также кнопку возврата в окно добавления данных.
-
-   :global main_window: Ссылка на главное окно приложения (не используется напрямую, но может быть нужна в других частях программы).
-   :type main_window: tk.Tk
-   :global add_data_window: Ссылка на окно добавления данных (не используется напрямую, но может быть нужна в других частях программы).
-   :type add_data_window: tk.Tk
-   :global add_train_window: Ссылка на окно добавления тренировки (создается в этой функции).
-   :type add_train_window: tk.Tk
-
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
-
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
-
-    global main_window, add_data_window, add_train_window
+    global main_window, add_data_window, add_train_window, is_add_train_window_open, is_add_data_window_open
+    is_add_train_window_open = True
+    if is_add_data_window_open:
+        add_data_window.destroy()
+        is_add_data_window_open = False
     add_train_window = tk.Tk()
     add_train_window.title("Добавление нового плана тренировок")
-    add_train_window.geometry("600x250+500+200")
-
-    Title_Font = tkFont.Font(family="Comic Sans MS", size=16)
-    Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
-    Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
-
-    welcome_label_7 = tk.Label(add_data_window, text="Добавить новые данные", font=Title_Font)
-    welcome_label_7.pack(pady=20)
-
-    add_train_button = tk.Button(add_data_window, text="Добавить план тренировки", command=open_add_train_window,
-                                 font=Button_Font)
-    add_train_button.pack(pady=5)
-
-    add_foodplan_button = tk.Button(add_data_window, text="Добавить план питания", command=open_add_foodplan_window,
-                                    font=Button_Font)
-    add_foodplan_button.pack(pady=5)
-
-    add_newfood_button = tk.Button(add_data_window, text="Добавить КБЖУ нового продукта",
-                                   command=open_add_newfood_window, font=Button_Font)
-    add_newfood_button.pack(pady=5)
-
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=return_to_main_from_add,
-                                 font=Button_Font)
-    main_menu_button.pack(pady=5)
-
-
-
-def open_add_train_window():
-    global main_window, add_data_window, add_train_window
-    add_data_window.destroy()
-    add_train_window = tk.Tk()
-    add_train_window.title("Добавление нового плана тренировок")
-    add_train_window.geometry("400x200+400+200")
+    add_train_window.geometry("500x250+400+200")
     try:
         logo = tk.PhotoImage(file='logo.png')
         add_train_window.iconphoto(False, logo)
@@ -854,50 +826,51 @@ def open_add_train_window():
     Button_Font = tkFont.Font(family="Comic Sans MS", size=13)
     Message_Font = tkFont.Font(family="Comic Sans MS", size=12)
 
-    welcome_label_8 = tk.Label(add_data_window, text="Добавьте новые данные о тренировке", font=Title_Font)
-    welcome_label_8.grid(row=1, column=1, padx=20, pady=5, sticky="w")
+    welcome_label_8 = tk.Label(add_train_window, text="Добавьте новые данные о тренировке", font=Title_Font)
+    welcome_label_8.grid(row=0, column=1, padx=20, pady=5, sticky="w")
 
-    new_train_plan_label = tk.Label(add_train_window, text="Добавьте данные о тренировке:", font=Message_Font)
-    new_train_plan_label.grid(row=2, column=1, padx=20, pady=5, sticky="w")
     new_train_plan_entry = tk.Entry(add_train_window)
-    new_train_plan_entry.grid(row=2, column=2, padx=20, pady=5, sticky="e")
+    new_train_plan_entry.grid(row=1, column=1, columnspan=3, padx=30, pady=10, sticky="w")
 
     def save_data():
         """Сохраняет введенный пользователем новый план тренировок и переходит в главное меню.
 
-   Эта функция считывает данные, введенные пользователем в поле ввода нового плана тренировок
-   (``new_train_plan_entry``), сохраняет их в глобальную переменную ``new_train_plan`` и
-   переходит к главному меню (вызывая функцию `open_main_menu`).
+        Эта функция считывает данные, введенные пользователем в поле ввода нового плана тренировок
+        (``new_train_plan_entry``), сохраняет их в глобальную переменную ``new_train_plan`` и
+        переходит к главному меню (вызывая функцию `open_main_menu`).
 
-   :global new_train_plan: Глобальная переменная для сохранения введенного плана тренировок.
-   :type new_train_plan: str
-   :global new_train_plan_entry: Виджет `tk.Entry`, содержащий новый план тренировок.
-   :type new_train_plan_entry: tk.Entry
+        :global new_train_plan: Глобальная переменная для сохранения введенного плана тренировок.
+        :type new_train_plan: str
+        :global new_train_plan_entry: Виджет `tk.Entry`, содержащий новый план тренировок.
+        :type new_train_plan_entry: tk.Entry
 
-   :raises ValueError: Если пользователь не ввел текст (выводит сообщение об ошибке в консоль).
-   :raises Exception: Если возникает ошибка при вызове `open_main_menu`.
+        :raises ValueError: Если пользователь не ввел текст (выводит сообщение об ошибке в консоль).
+        :raises Exception: Если возникает ошибка при вызове `open_main_menu`.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+        :return: None
+            Функция не возвращает значения.
+        :rtype: None
+        """
         global new_train_plan
         try:
             new_train_plan = str(new_train_plan_entry.get())
             print(f"Новый план тренировок: {new_train_plan}")
-            open_main_menu()
+            from_train_to_main()
         except ValueError:
             print("Ошибка: Введите текст.")
 
-    save_and_next_button = tk.Button(add_data_window, text="Сохранить и выйти", command=save_data, font=Button_Font)
-    save_and_next_button.grid(row=3, column=1, columnspan=2, padx=30, pady=10, sticky="w")
+    save_and_next_button = tk.Button(add_train_window, text="Сохранить и выйти", command=save_data, font=Button_Font)
+    save_and_next_button.grid(row=2, column=1,  padx=30, pady=10, sticky="w")
 
-    ex_window_button = tk.Button(add_data_window, text="Назад", command=open_add_data_window, font=Button_Font)
-    ex_window_button.grid(row=4, column=1, columnspan=2, padx=30, pady=10, sticky="w")
+    ex_window_button = tk.Button(add_train_window, text="Назад", command=return_to_add_data_window_from_aT, font=Button_Font)
+    ex_window_button.grid(row=2, column=2, padx=10, pady=10, sticky="w")
 
-    main_menu_button = tk.Button(add_data_window, text="Главное меню", command=open_main_menu, font=Button_Font)
-    main_menu_button.grid(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
+    main_menu_button = tk.Button(add_train_window, text="Главное меню", command=from_train_to_main, font=Button_Font)
+    main_menu_button.grid(row=4, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
+def from_train_to_main():
+    add_train_window.destroy()
+    open_main_menu()
 
 def add_meal_plan():
     """Собирает данные о новом плане питания из полей ввода и передает их в функцию ``add_meal_plans``.
@@ -1056,7 +1029,7 @@ def return_to_add_data_window_from_aT():
    :rtype: None
    """
     add_train_window.destroy()
-    add_data_window.deiconify()
+    open_add_data_window()
 
 
 def return_to_add_data_window():
@@ -1079,8 +1052,6 @@ def return_to_add_data_window():
    """
     add_foodplan_window.destroy()
     add_data_window.deiconify()
-
-
 
 
 def add_newfood():
