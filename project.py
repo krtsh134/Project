@@ -47,37 +47,37 @@ def open_hello_window():
 
 
 def open_parametrs_window():
-    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, age, bmi
     """Открывает окно для ввода пользовательских параметров (рост, вес, возраст, пол).
 
-   Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
-   информации о пользователе (рост, вес, возраст и пол). После ввода данных вычисляется
-   индекс массы тела (ИМТ) и сохраняется в глобальные переменные. Затем происходит переход в главное меню.
+    Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
+    информации о пользователе (рост, вес, возраст и пол). После ввода данных вычисляется
+    индекс массы тела (ИМТ) и сохраняется в глобальные переменные. Затем происходит переход в главное меню.
 
-   :global hello_window: Ссылка на приветственное окно (которое будет закрыто).
+    :global hello_window: Ссылка на приветственное окно (которое будет закрыто).
     :type hello_window: tk.Tk
-   :global parametrs_window: Ссылка на окно параметров (создается в этой функции).
-   :type parametrs_window: tk.Tk
-   :global height_entry: Виджет `tk.Entry` для ввода роста пользователя (в см).
-   :type height_entry: tk.Entry
-   :global weight_entry: Виджет `tk.Entry` для ввода веса пользователя (в кг).
-   :type weight_entry: tk.Entry
-   :global age_entry: Виджет `tk.Entry` для ввода возраста пользователя.
-   :type age_entry: tk.Entry
+    :global parametrs_window: Ссылка на окно параметров (создается в этой функции).
+    :type parametrs_window: tk.Tk
+    :global height_entry: Виджет `tk.Entry` для ввода роста пользователя (в см).
+    :type height_entry: tk.Entry
+    :global weight_entry: Виджет `tk.Entry` для ввода веса пользователя (в кг).
+    :type weight_entry: tk.Entry
+    :global age_entry: Виджет `tk.Entry` для ввода возраста пользователя.
+    :type age_entry: tk.Entry
     :global gender: Переменная для хранения пола пользователя.
     :type gender: str
-   :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров.
+    :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров.
     :type is_parametrs_window_open: bool
-   :global bmi: Переменная для хранения ИМТ пользователя.
+    :global bmi: Переменная для хранения ИМТ пользователя.
     :type bmi: float
 
-   :raises ValueError: Если пользователь вводит нечисловые значения в поля ввода (рост, вес, возраст), выводится сообщение об ошибке в консоль.
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises ValueError: Если пользователь вводит нечисловые значения в поля ввода (рост, вес, возраст), выводится сообщение об ошибке в консоль.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
+    global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, age, bmi
     try:
         hello_window.destroy()
     except (NameError, tk.TclError):
@@ -117,8 +117,8 @@ def open_parametrs_window():
     gendr_label = tk.Label(parametrs_window, text="Пол:", font=Message_Font)
     gendr_label.grid(row=4, column=1, padx=20, pady=5, sticky="w")
     gendr_var = tk.StringVar(parametrs_window)
-    gendr_var.set("Мужской")
-    gendr_options = ["Мужской", "Женский"]
+    gendr_var.set("Male")
+    gendr_options = ["Male", "Female"]
     gendr_menu = tk.OptionMenu(parametrs_window, gendr_var, *gendr_options)
     gendr_menu.grid(row=4, column=2, padx=20, pady=5, sticky="w")
 
@@ -127,36 +127,36 @@ def open_parametrs_window():
         """
         Сохраняет введенные пользователем параметры (рост, вес, возраст, пол) и вычисляет ИМТ.
 
-   Эта функция считывает значения роста, веса и возраста из соответствующих виджетов ввода,
-   а также выбранный пол из выпадающего списка. Затем вычисляет индекс массы тела (ИМТ)
-   и сохраняет все эти данные в глобальные переменные. После этого вызывает функцию `from_par_to_main()`
-   для перехода в главное меню.
+    Эта функция считывает значения роста, веса и возраста из соответствующих виджетов ввода,
+    а также выбранный пол из выпадающего списка. Затем вычисляет индекс массы тела (ИМТ)
+    и сохраняет все эти данные в глобальные переменные. После этого вызывает функцию `from_par_to_main()`
+    для перехода в главное меню.
 
-   :global height: Глобальная переменная для хранения роста пользователя (в см).
-   :type height: float
-   :global weight: Глобальная переменная для хранения веса пользователя (в кг).
-   :type weight: float
-   :global age: Глобальная переменная для хранения возраста пользователя.
-   :type age: float
+    :global height: Глобальная переменная для хранения роста пользователя (в см).
+    :type height: float
+    :global weight: Глобальная переменная для хранения веса пользователя (в кг).
+    :type weight: float
+    :global age: Глобальная переменная для хранения возраста пользователя.
+    :type age: float
     :global gendr: Глобальная переменная для хранения пола пользователя.
     :type gendr: str
-   :global bmi: Глобальная переменная для хранения индекса массы тела пользователя.
-   :type bmi: float
-   :global height_entry: Виджет `tk.Entry`, из которого считывается рост пользователя.
-   :type height_entry: tk.Entry
-   :global weight_entry: Виджет `tk.Entry`, из которого считывается вес пользователя.
-   :type weight_entry: tk.Entry
-   :global age_entry: Виджет `tk.Entry`, из которого считывается возраст пользователя.
-   :type age_entry: tk.Entry
-   :global gender_var: Переменная `tk.StringVar`, хранящая выбранный пол пользователя из `tk.OptionMenu`.
-   :type gender_var: tk.StringVar
+    :global bmi: Глобальная переменная для хранения индекса массы тела пользователя.
+    :type bmi: float
+    :global height_entry: Виджет `tk.Entry`, из которого считывается рост пользователя.
+    :type height_entry: tk.Entry
+    :global weight_entry: Виджет `tk.Entry`, из которого считывается вес пользователя.
+    :type weight_entry: tk.Entry
+    :global age_entry: Виджет `tk.Entry`, из которого считывается возраст пользователя.
+    :type age_entry: tk.Entry
+    :global gender_var: Переменная `tk.StringVar`, хранящая выбранный пол пользователя из `tk.OptionMenu`.
+    :type gender_var: tk.StringVar
 
-   :raises ValueError: Если пользователь не ввел числовые значения в поля роста, веса или возраста, выводится сообщение об ошибке в консоль.
-   :raises Exception: Если возникает ошибка при вызове `from_par_to_main`, будет вызвано исключение.
+    :raises ValueError: Если пользователь не ввел числовые значения в поля роста, веса или возраста, выводится сообщение об ошибке в консоль.
+    :raises Exception: Если возникает ошибка при вызове `from_par_to_main`, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None'''
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None'''
         global height, weight, age, gendr, bmi
         try:
             height = float(height_entry.get())
@@ -175,51 +175,51 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
+parametrs_window = MagicMock()
 
 def from_par_to_main():
     """Закрывает окно с параметрами и возвращает пользователя в главное меню.
 
-   Эта функция уничтожает окно с параметрами (``parametrs_window``) и открывает главное меню,
-   вызывая функцию `open_main_menu`.
+    Эта функция уничтожает окно с параметрами (``parametrs_window``) и открывает главное меню,
+    вызывая функцию `open_main_menu`.
 
-   :global parametrs_window: Ссылка на окно с параметрами, которое будет закрыто.
-   :type parametrs_window: tk.Tk
+    :global parametrs_window: Ссылка на окно с параметрами, которое будет закрыто.
+    :type parametrs_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     parametrs_window.destroy()
     open_main_menu()
-
 
 def open_main_menu():
     """Открывает главное меню приложения, предоставляющее пользователю выбор действий.
 
-   Эта функция создает новое окно Tkinter (``main_window``) с главным меню, которое позволяет
-   пользователю перейти к различным разделам приложения:
+    Эта функция создает новое окно Tkinter (``main_window``) с главным меню, которое позволяет
+    пользователю перейти к различным разделам приложения:
      - План тренировок
      - План питания
      - Счетчик калорий
      - Ввод новых данных в базу данных
 
-   :global main_window: Ссылка на главное окно приложения (создается в этой функции).
-   :type main_window: tk.Tk
-   :global parametrs_window: Ссылка на окно параметров (не используется в коде, но может быть нужна в других частях приложения).
-   :type parametrs_window: tk.Tk
-   :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
-   :type is_main_window_open: bool
+    :global main_window: Ссылка на главное окно приложения (создается в этой функции).
+    :type main_window: tk.Tk
+    :global parametrs_window: Ссылка на окно параметров (не используется в коде, но может быть нужна в других частях приложения).
+    :type parametrs_window: tk.Tk
+    :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
+    :type is_main_window_open: bool
     :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров (не используется в коде, но может быть нужна в других частях приложения).
-   :type is_parametrs_window_open: bool
+    :type is_parametrs_window_open: bool
 
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     global main_window, parametrs_window, is_main_window_open
 
     is_main_window_open = True
@@ -285,7 +285,7 @@ def display_train_plan():
     if plans is None or not plans:
         messagebox.showinfo("Результат", "Не найдено тренировочных планов.")
     else:
-        result = "\n".join([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans])
+        result = "\n".join(set([f"Номер: {train[0]}, Описание: {train[1]}" for train in plans]))
         messagebox.showinfo("Тренировочные планы", result)
 
         result_text_1.delete(1.0, tk.END)
@@ -319,7 +319,7 @@ def open_train_window():
     main_window.withdraw()
     train_window = tk.Tk()
     train_window.title("План тренировки")
-    train_window.geometry("600x750+450+100")
+    train_window.geometry("600x470+450+100")
 
     try:
         logo = tk.PhotoImage(file='logo.png')
@@ -564,6 +564,15 @@ def open_counter_kcal_window():
 main_window=MagicMock()
 counter_kcal_window=MagicMock()
 def back_to_add_data_window3():
+    '''Закрывает текущее окно подсчета калорий и возвращает к окну добавления данных.
+
+    Эта функция предназначена для закрытия окна подсчета калорий и возвращения пользователя к окну добавления данных.
+    При вызове функции текущее окно подсчета калорий закрывается, а главное окно становится видимым.
+
+    :global counter_kcal_window: Глобальная переменная для окна подсчета калорий.
+    :type counter_kcal_window: tk.Tk
+
+    :raises Exception: Если возникает ошибка при попытке закрыть окно.'''
     global counter_kcal_window
     counter_kcal_window.destroy()
     main_window.deiconify()
@@ -756,22 +765,36 @@ def open_add_data_window():
 def return_to_main_from_add():
     """Закрывает окно добавления данных и возвращает пользователя в главное меню.
 
-   Эта функция уничтожает окно добавления данных (``add_data_window``) и открывает главное меню,
-   вызывая функцию `open_main_menu`.
+    Эта функция уничтожает окно добавления данных (``add_data_window``) и открывает главное меню,
+    вызывая функцию `open_main_menu`.
 
-   :global add_data_window: Ссылка на окно добавления данных, которое будет закрыто.
-   :type add_data_window: tk.Tk
+    :global add_data_window: Ссылка на окно добавления данных, которое будет закрыто.
+    :type add_data_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     add_data_window.destroy()
     open_main_menu()
 
-def add_new_train():
+def add_new_train(age, bmi, new_train_plan, gendr):
+    '''Добавляет новый тренировочный план на основе возраста, индекса массы тела (ИМТ) и пола.
+
+    :param age: Возраст пользователя. Должен быть целым числом от 16 до 55.
+    :type age: int
+    :param bmi: Индекс массы тела пользователя. Должен быть числом с плавающей запятой.
+    :type bmi: float
+    :param new_train_plan: Описание нового тренировочного плана.
+    :type new_train_plan: str
+    :param gendr: Пол пользователя. Ожидается строка, представляющая пол ('male' или 'female').
+    :type gendr: str
+
+    :raises ValueError: Если возраст не находится в диапазоне от 16 до 55.
+    :raises ValueError: Если ИМТ не находится в диапазоне от 10 до 35.'''
+    
     if 16 <= age <= 20:
         age_min = 16
         age_max = 20
@@ -810,6 +833,24 @@ def add_new_train():
     add_train_plans(age_min, age_max, bmi_min, bmi_max, train_number, gendr, description_train)
 
 def open_add_train_window():
+    '''Открывает окно для добавления нового плана тренировок.
+
+    Эта функция создает новое окно, где пользователь может ввести данные о новом тренировочном плане.
+    Если в данный момент открыто окно добавления данных, оно будет закрыто. Окно содержит поля для ввода
+    нового плана тренировок и кнопки для сохранения данных или возвращения в главное меню.
+
+    :global main_window: Глобальная переменная для основного окна приложения.
+    :type main_window: tk.Tk
+    :global add_data_window: Глобальная переменная для окна добавления данных.
+    :type add_data_window: tk.Tk
+    :global add_train_window: Глобальная переменная для окна добавления плана тренировок.
+    :type add_train_window: tk.Tk
+    :global is_add_train_window_open: Флаг, указывающий, открыто ли окно добавления плана тренировок.
+    :type is_add_train_window_open: bool
+    :global is_add_data_window_open: Флаг, указывающий, открыто ли окно добавления данных.
+    :type is_add_data_window_open: bool
+
+    :raises Exception: Если возникает ошибка при загрузке изображения логотипа.'''
     global main_window, add_data_window, add_train_window, is_add_train_window_open, is_add_data_window_open
     is_add_train_window_open = True
     if is_add_data_window_open:
@@ -871,6 +912,15 @@ def open_add_train_window():
     main_menu_button.grid(row=4, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
 def from_train_to_main():
+    '''Закрывает окно добавления плана тренировок и открывает главное меню.
+
+   Эта функция предназначена для перехода от окна добавления нового плана тренировок обратно к главному меню приложения.
+   При вызове функции текущее окно добавления плана тренировок закрывается, а затем открывается главное меню.
+
+   :global add_train_window: Глобальная переменная для окна добавления плана тренировок.
+   :type add_train_window: tk.Tk
+
+   :raises Exception: Если возникает ошибка при попытке закрыть окно.'''
     add_train_window.destroy()
     open_main_menu()
 
@@ -1015,21 +1065,21 @@ def open_add_foodplan_window():
 def return_to_add_data_window_from_aT():
     """Возвращает пользователя в окно добавления данных из окна добавления тренировки.
 
-   Эта функция уничтожает окно добавления тренировки (``add_train_window``)
-   и отображает окно добавления данных (``add_data_window``), делая его видимым.
+    Эта функция уничтожает окно добавления тренировки (``add_train_window``)
+    и отображает окно добавления данных (``add_data_window``), делая его видимым.
 
-   :global add_train_window: Ссылка на окно добавления тренировки, которое будет закрыто.
-   :type add_train_window: tk.Tk
-   :global add_data_window: Ссылка на окно добавления данных, которое будет открыто.
-   :type add_data_window: tk.Tk
+    :global add_train_window: Ссылка на окно добавления тренировки, которое будет закрыто.
+    :type add_train_window: tk.Tk
+    :global add_data_window: Ссылка на окно добавления данных, которое будет открыто.
+    :type add_data_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или отображении нового, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или отображении нового, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
+    :return: None
+        Функция не возвращает значения.
 
-   :rtype: None
-   """
+    :rtype: None
+    """
     add_train_window.destroy()
     open_add_data_window()
 
@@ -1037,21 +1087,21 @@ def return_to_add_data_window_from_aT():
 def return_to_add_data_window():
     """Возвращает пользователя в окно добавления данных из окна добавления плана питания.
 
-   Эта функция уничтожает окно добавления плана питания (``add_foodplan_window``)
-   и отображает окно добавления данных (``add_data_window``), делая его видимым.
+    Эта функция уничтожает окно добавления плана питания (``add_foodplan_window``)
+    и отображает окно добавления данных (``add_data_window``), делая его видимым.
 
-   :global add_foodplan_window: Ссылка на окно добавления плана питания, которое будет закрыто.
-   :type add_foodplan_window: tk.Tk
-   :global add_data_window: Ссылка на окно добавления данных, которое будет открыто.
-   :type add_data_window: tk.Tk
+    :global add_foodplan_window: Ссылка на окно добавления плана питания, которое будет закрыто.
+    :type add_foodplan_window: tk.Tk
+    :global add_data_window: Ссылка на окно добавления данных, которое будет открыто.
+    :type add_data_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или отображении нового, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или отображении нового, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
+    :return: None
+        Функция не возвращает значения.
 
-   :rtype: None
-   """
+    :rtype: None
+    """
     add_foodplan_window.destroy()
     add_data_window.deiconify()
 
