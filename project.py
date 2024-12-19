@@ -50,34 +50,34 @@ def open_parametrs_window():
     global hello_window, parametrs_window, height_entry, weight_entry, age_entry, gendr, age, bmi
     """Открывает окно для ввода пользовательских параметров (рост, вес, возраст, пол).
 
-   Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
-   информации о пользователе (рост, вес, возраст и пол). После ввода данных вычисляется
-   индекс массы тела (ИМТ) и сохраняется в глобальные переменные. Затем происходит переход в главное меню.
+    Эта функция создает новое окно Tkinter (``parametrs_window``), предназначенное для сбора
+    информации о пользователе (рост, вес, возраст и пол). После ввода данных вычисляется
+    индекс массы тела (ИМТ) и сохраняется в глобальные переменные. Затем происходит переход в главное меню.
 
-   :global hello_window: Ссылка на приветственное окно (которое будет закрыто).
+    :global hello_window: Ссылка на приветственное окно (которое будет закрыто).
     :type hello_window: tk.Tk
-   :global parametrs_window: Ссылка на окно параметров (создается в этой функции).
-   :type parametrs_window: tk.Tk
-   :global height_entry: Виджет `tk.Entry` для ввода роста пользователя (в см).
-   :type height_entry: tk.Entry
-   :global weight_entry: Виджет `tk.Entry` для ввода веса пользователя (в кг).
-   :type weight_entry: tk.Entry
-   :global age_entry: Виджет `tk.Entry` для ввода возраста пользователя.
-   :type age_entry: tk.Entry
+    :global parametrs_window: Ссылка на окно параметров (создается в этой функции).
+    :type parametrs_window: tk.Tk
+    :global height_entry: Виджет `tk.Entry` для ввода роста пользователя (в см).
+    :type height_entry: tk.Entry
+    :global weight_entry: Виджет `tk.Entry` для ввода веса пользователя (в кг).
+    :type weight_entry: tk.Entry
+    :global age_entry: Виджет `tk.Entry` для ввода возраста пользователя.
+    :type age_entry: tk.Entry
     :global gender: Переменная для хранения пола пользователя.
     :type gender: str
-   :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров.
+    :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров.
     :type is_parametrs_window_open: bool
-   :global bmi: Переменная для хранения ИМТ пользователя.
+    :global bmi: Переменная для хранения ИМТ пользователя.
     :type bmi: float
 
-   :raises ValueError: Если пользователь вводит нечисловые значения в поля ввода (рост, вес, возраст), выводится сообщение об ошибке в консоль.
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises ValueError: Если пользователь вводит нечисловые значения в поля ввода (рост, вес, возраст), выводится сообщение об ошибке в консоль.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     try:
         hello_window.destroy()
     except (NameError, tk.TclError):
@@ -127,36 +127,36 @@ def open_parametrs_window():
         """
         Сохраняет введенные пользователем параметры (рост, вес, возраст, пол) и вычисляет ИМТ.
 
-   Эта функция считывает значения роста, веса и возраста из соответствующих виджетов ввода,
-   а также выбранный пол из выпадающего списка. Затем вычисляет индекс массы тела (ИМТ)
-   и сохраняет все эти данные в глобальные переменные. После этого вызывает функцию `from_par_to_main()`
-   для перехода в главное меню.
+    Эта функция считывает значения роста, веса и возраста из соответствующих виджетов ввода,
+    а также выбранный пол из выпадающего списка. Затем вычисляет индекс массы тела (ИМТ)
+    и сохраняет все эти данные в глобальные переменные. После этого вызывает функцию `from_par_to_main()`
+    для перехода в главное меню.
 
-   :global height: Глобальная переменная для хранения роста пользователя (в см).
-   :type height: float
-   :global weight: Глобальная переменная для хранения веса пользователя (в кг).
-   :type weight: float
-   :global age: Глобальная переменная для хранения возраста пользователя.
-   :type age: float
+    :global height: Глобальная переменная для хранения роста пользователя (в см).
+    :type height: float
+    :global weight: Глобальная переменная для хранения веса пользователя (в кг).
+    :type weight: float
+    :global age: Глобальная переменная для хранения возраста пользователя.
+    :type age: float
     :global gendr: Глобальная переменная для хранения пола пользователя.
     :type gendr: str
-   :global bmi: Глобальная переменная для хранения индекса массы тела пользователя.
-   :type bmi: float
-   :global height_entry: Виджет `tk.Entry`, из которого считывается рост пользователя.
-   :type height_entry: tk.Entry
-   :global weight_entry: Виджет `tk.Entry`, из которого считывается вес пользователя.
-   :type weight_entry: tk.Entry
-   :global age_entry: Виджет `tk.Entry`, из которого считывается возраст пользователя.
-   :type age_entry: tk.Entry
-   :global gender_var: Переменная `tk.StringVar`, хранящая выбранный пол пользователя из `tk.OptionMenu`.
-   :type gender_var: tk.StringVar
+    :global bmi: Глобальная переменная для хранения индекса массы тела пользователя.
+    :type bmi: float
+    :global height_entry: Виджет `tk.Entry`, из которого считывается рост пользователя.
+    :type height_entry: tk.Entry
+    :global weight_entry: Виджет `tk.Entry`, из которого считывается вес пользователя.
+    :type weight_entry: tk.Entry
+    :global age_entry: Виджет `tk.Entry`, из которого считывается возраст пользователя.
+    :type age_entry: tk.Entry
+    :global gender_var: Переменная `tk.StringVar`, хранящая выбранный пол пользователя из `tk.OptionMenu`.
+    :type gender_var: tk.StringVar
 
-   :raises ValueError: Если пользователь не ввел числовые значения в поля роста, веса или возраста, выводится сообщение об ошибке в консоль.
-   :raises Exception: Если возникает ошибка при вызове `from_par_to_main`, будет вызвано исключение.
+    :raises ValueError: Если пользователь не ввел числовые значения в поля роста, веса или возраста, выводится сообщение об ошибке в консоль.
+    :raises Exception: Если возникает ошибка при вызове `from_par_to_main`, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None'''
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None'''
         global height, weight, age, gendr, bmi
         try:
             height = float(height_entry.get())
@@ -175,51 +175,51 @@ def open_parametrs_window():
 
     parametrs_window.mainloop()
 
+parametrs_window = MagicMock()
 
 def from_par_to_main():
     """Закрывает окно с параметрами и возвращает пользователя в главное меню.
 
-   Эта функция уничтожает окно с параметрами (``parametrs_window``) и открывает главное меню,
-   вызывая функцию `open_main_menu`.
+    Эта функция уничтожает окно с параметрами (``parametrs_window``) и открывает главное меню,
+    вызывая функцию `open_main_menu`.
 
-   :global parametrs_window: Ссылка на окно с параметрами, которое будет закрыто.
-   :type parametrs_window: tk.Tk
+    :global parametrs_window: Ссылка на окно с параметрами, которое будет закрыто.
+    :type parametrs_window: tk.Tk
 
-   :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
+    :raises Exception: Если происходит ошибка при закрытии окна или открытии главного меню, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     parametrs_window.destroy()
     open_main_menu()
-
 
 def open_main_menu():
     """Открывает главное меню приложения, предоставляющее пользователю выбор действий.
 
-   Эта функция создает новое окно Tkinter (``main_window``) с главным меню, которое позволяет
-   пользователю перейти к различным разделам приложения:
+    Эта функция создает новое окно Tkinter (``main_window``) с главным меню, которое позволяет
+    пользователю перейти к различным разделам приложения:
      - План тренировок
      - План питания
      - Счетчик калорий
      - Ввод новых данных в базу данных
 
-   :global main_window: Ссылка на главное окно приложения (создается в этой функции).
-   :type main_window: tk.Tk
-   :global parametrs_window: Ссылка на окно параметров (не используется в коде, но может быть нужна в других частях приложения).
-   :type parametrs_window: tk.Tk
-   :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
-   :type is_main_window_open: bool
+    :global main_window: Ссылка на главное окно приложения (создается в этой функции).
+    :type main_window: tk.Tk
+    :global parametrs_window: Ссылка на окно параметров (не используется в коде, но может быть нужна в других частях приложения).
+    :type parametrs_window: tk.Tk
+    :global is_main_window_open: Флаг, указывающий, открыто ли главное окно.
+    :type is_main_window_open: bool
     :global is_parametrs_window_open: Флаг, указывающий, открыто ли окно параметров (не используется в коде, но может быть нужна в других частях приложения).
-   :type is_parametrs_window_open: bool
+    :type is_parametrs_window_open: bool
 
-   :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
+    :raises Exception: Если возникает ошибка при создании или отображении окна, будет вызвано исключение.
 
-   :return: None
-       Функция не возвращает значения.
-   :rtype: None
-   """
+    :return: None
+        Функция не возвращает значения.
+    :rtype: None
+    """
     global main_window, parametrs_window, is_main_window_open
 
     is_main_window_open = True
@@ -771,7 +771,7 @@ def return_to_main_from_add():
     add_data_window.destroy()
     open_main_menu()
 
-def add_new_train():
+def add_new_train(age, bmi, new_train_plan, gendr):
     if 16 <= age <= 20:
         age_min = 16
         age_max = 20
