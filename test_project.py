@@ -69,22 +69,17 @@ class TestOpenHelloWindow(unittest.TestCase):
         """
         Тест успешного создания приветственного окна.
         """
-        # Create a real root window but hide it
         root = tk.Tk()
         root.withdraw()
 
-        # Mock PhotoImage and other widgets
         mock_photo.return_value = MagicMock()
 
-        # Call the function
         open_hello_window()
 
-        # Verify that fonts and widgets were created
         self.assertEqual(mock_font.call_count, 2)
         mock_label.assert_called_once()
         mock_button.assert_called_once()
 
-        # Clean up the root window
         root.destroy()
 
     @patch("tkinter.PhotoImage", side_effect=tk.TclError)
@@ -92,7 +87,6 @@ class TestOpenHelloWindow(unittest.TestCase):
         """
         Тест случая, когда файл logo.png отсутствует.
         """
-        # Create a real root window but hide it
         root = tk.Tk()
         root.withdraw()
 
@@ -100,7 +94,6 @@ class TestOpenHelloWindow(unittest.TestCase):
             open_hello_window()
             mock_print.assert_called_once_with("Warning: logo.png not found.")
 
-        # Clean up the root window
         root.destroy()
 
 class TestOpenParametrsWindow(unittest.TestCase):
@@ -117,25 +110,19 @@ class TestOpenParametrsWindow(unittest.TestCase):
         """
         Тест успешного создания окна параметров и его компонентов.
         """
-        # Mock Tk root window
         mock_window = MagicMock()
         mock_tk.return_value = mock_window
 
-        # Mock PhotoImage
         mock_photo.return_value = MagicMock()
 
-        # Call the function
         open_parametrs_window()
 
-        # Assertions: ensure window and widgets are created
         mock_tk.assert_called_once()
         mock_window.title.assert_called_once_with("Ваши параметры")
         mock_window.geometry.assert_called_once_with("300x300+600+200")
 
-        # Verify PhotoImage is called with master
         mock_photo.assert_called_once_with(master=mock_window, file='logo.png')
 
-        # Check that fonts, labels, entries, and buttons were created
         self.assertEqual(mock_font.call_count, 3)
         mock_label.assert_called()
         mock_entry.assert_called()
@@ -152,25 +139,20 @@ class TestOpenParametrsWindow(unittest.TestCase):
         """
         Тест проверки сохранения данных и вычисления ИМТ.
         """
-        # Mock Tk root window
         mock_window = MagicMock()
         mock_tk.return_value = mock_window
 
-        # Mock entry fields
         mock_entry.side_effect = [
-            MagicMock(get=MagicMock(return_value="170")),  # height
-            MagicMock(get=MagicMock(return_value="70")),   # weight
-            MagicMock(get=MagicMock(return_value="25"))    # age
+            MagicMock(get=MagicMock(return_value="170")),  
+            MagicMock(get=MagicMock(return_value="70")),   
+            MagicMock(get=MagicMock(return_value="25"))    
         ]
 
-        # Mock StringVar for gender
         mock_gendr_var = MagicMock()
         mock_gendr_var.get.return_value = "Мужской"
 
-        # Mock PhotoImage
         mock_photo.return_value = MagicMock()
 
-        # Capture the Button command argument
         button_command = None
 
         def mock_button_init(*args, **kwargs):
@@ -183,15 +165,12 @@ class TestOpenParametrsWindow(unittest.TestCase):
         with patch("project.open_main_menu") as mock_open_main_menu:
             open_parametrs_window()
 
-            # Simulate pressing the save button
             if button_command:
                 button_command()
 
-            # Assert correct BMI calculation and printed output
             mock_print.assert_called_with("Рост: 170.0 см, Вес: 70.0 кг, Возраст: 25.0, Пол: Мужской, ИМТ: 24.2")
             mock_open_main_menu.assert_called_once()
 
-        # Verify PhotoImage was called correctly
         mock_photo.assert_called_once_with(master=mock_window, file="logo.png")
 
 
@@ -205,15 +184,13 @@ class TestOpenParametrsWindow(unittest.TestCase):
         """
         Тест проверки сохранения данных и вычисления ИМТ.
         """
-        # Mock Tk root window
         mock_window = MagicMock()
         mock_tk.return_value = mock_window
 
-        # Mock entry fields
         mock_entry.side_effect = [
-            MagicMock(get=MagicMock(return_value="170")),  # height
-            MagicMock(get=MagicMock(return_value="70")),   # weight
-            MagicMock(get=MagicMock(return_value="25"))    # age
+            MagicMock(get=MagicMock(return_value="170")),  
+            MagicMock(get=MagicMock(return_value="70")),   
+            MagicMock(get=MagicMock(return_value="25"))    
         ]
 
         mock_gendr_var_instance = MagicMock()
@@ -221,14 +198,11 @@ class TestOpenParametrsWindow(unittest.TestCase):
         mock_stringvar.return_value = mock_gendr_var_instance
 
 
-# Mock PhotoImage
         mock_photo.return_value = MagicMock()
 
-        # Ensure Button returns a mock object with a .grid method
         mock_button_instance = MagicMock()
         mock_button.return_value = mock_button_instance
 
-        # Capture the Button command argument
         button_command = None
 
         def mock_button_init(*args, **kwargs):
@@ -239,19 +213,15 @@ class TestOpenParametrsWindow(unittest.TestCase):
 
         mock_button.side_effect = mock_button_init
 
-        # Mock open_main_menu to verify it gets called
         with patch("project.open_main_menu") as mock_open_main_menu:
             open_parametrs_window()
 
-            # Simulate pressing the save button
             if button_command:
                 button_command()
 
-            # Assert correct BMI calculation and printed output
             mock_print.assert_called_with("Рост: 170.0 см, Вес: 70.0 кг, Возраст: 25.0, Пол: Мужской, ИМТ: 20.0")
             mock_open_main_menu.assert_called_once()
 
-        # Verify PhotoImage was called correctly
         mock_photo.assert_called_once_with(master=mock_window, file="logo.png")
         mock_button_instance.grid.assert_called_once_with(row=5, column=1, columnspan=2, padx=30, pady=10, sticky="w")
 
